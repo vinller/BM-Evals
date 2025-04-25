@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Section {{ section_num }} Questions</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white p-6 min-h-screen">
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-xl font-bold">Section {{ section_num }}</h1>
+    <div class="flex gap-2">
+      <button onclick="toggleSelectMode()" class="bg-yellow-500 px-4 py-2 rounded">Select</button>
+      <button onclick="showAddModal()" class="bg-green-600 px-4 py-2 rounded">Add</button>
+      <a href="/questions" class="bg-blue-600 px-4 py-2 rounded">Back</a>
+    </div>
+  </div>
+
+  <form id="delete-form" class="space-y-3">
+    {% for q in questions %}
+    <div class="bg-gray-800 p-4 rounded flex items-start gap-3">
+      <input type="checkbox" name="q" value="{{ q.q }}" class="hidden checkbox">
+      <div>
+        <p class="font-semibold">Q: {{ q.q }}</p>
+        <p class="text-gray-400 text-sm">A: {{ q.a }}</p>
+      </div>
+    </div>
+    {% endfor %}
+    <button type="button" onclick="deleteSelected()" class="hidden mt-4 bg-red-600 px-4 py-2 rounded" id="delete-btn">Delete Selected</button>
+  </form>
+
+  <!-- Add Modal -->
+  <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-gray-800 p-6 rounded w-full max-w-md">
+      <h2 class="text-xl font-semibold mb-4">Add New Question</h2>
+      <input id="new-q" placeholder="Question" class="text-black w-full p-2 rounded mb-3" />
+      <input id="new-a" placeholder="Answer" class="text-black w-full p-2 rounded mb-4" />
+      <div class="flex justify-end gap-2">
+        <button onclick="hideAddModal()" class="bg-gray-600 px-4 py-2 rounded">Cancel</button>
+        <button onclick="addQuestion()" class="bg-green-600 px-4 py-2 rounded">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectMode = false;
+    function toggleSelectMode() {
+      selectMode = !selectMode;
+      document.querySelectorAll('.checkbox').forEach(cb => {
+        cb.classList.toggle('hidden', !selectMode);
+      });
+      document.getElementById('delete-btn').classList.toggle('hidden', !selectMode);
+    }
+
+    function showAddModal() {
+      document.getElementById('modal').classList.remove('hidden');
+    }
+
+    function hideAddModal() {
+      document.getElementById('modal').classList.add('hidden');
+    }
+
+    function addQuestion() {
+      const q = document.getElementById('new-q').value.trim();
+      const a = document.getElementById('new-a').value.trim();
+      if (!q || !a) return alert('Both fields are required');
+      fetch(`/questions/section_{{ section_num }}/add`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ q, a })
+      }).then(() => location.reload());
+    }
+
+    function deleteSelected() {
+      const toDelete = Array.from(document.querySelectorAll('input[name=q]:checked')).map(cb => cb.value);
+      if (toDelete.length === 0) return;
+      fetch(`/questions/section_{{ section_num }}/delete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ questions: toDelete })
+      }).then(() => location.reload());
+    }
+  </script>
+</body>
+</html>

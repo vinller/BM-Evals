@@ -1,0 +1,15 @@
+{
+    "admin": {
+      "first_name": "Vinny",
+      "last_name": "Panchal",
+      "email": "vinny@asu.edu",
+      "password": "admin123"
+    },
+    "jdoe": {
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "jdoe@example.com",
+      "password": "password456"
+    }
+  }
+  
