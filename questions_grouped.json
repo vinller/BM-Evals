@@ -9,10 +9,6 @@
       "a": "By performing a building walkthrough and checking in with Event Assistants."
     },
     {
-      "q": "Hello, how\u2019s it going?",
-      "a": "It\u2019s going good"
-    },
-    {
       "q": "Which of the following should you not do if you are inside the building and active shooting is taking place? \na. If safe, exit the building and call 9-11 \nb. If you cannot leave, secure your area \nc. Yell for help \nd. Silence your cell phones",
       "a": "true"
     }

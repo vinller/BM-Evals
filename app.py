@@ -8,9 +8,9 @@ from datetime import datetime
 from docx import Document
 from docx.shared import Pt
 from io import BytesIO
-
 import subprocess
 import os
+from flask import send_from_directory
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
@@ -19,14 +19,17 @@ app.secret_key = 'supersecretkey'
 with open("users.json") as f:
     USERS = json.load(f)
 
-# Load question data
-with open("questions_grouped.json") as f:
-    QUESTIONS_BY_SECTION = json.load(f)
 
-with open("questions_grouped.json") as f:
-    grouped = json.load(f)
+def get_current_questions():
+    with open("questions_grouped.json") as f:
+        return json.load(f)
 
 # ---- Routes ----
+
+@app.route("/History/<path:filename>")
+def download_file(filename):
+    return send_from_directory("History", filename, as_attachment=True)
+
 @app.route("/")
 def home():
     if "user" in session:
@@ -120,7 +123,9 @@ def generate_doc(uuid, copy_type, user, prefix, include_answers=False):
     # Collect up to 10 questions from each section (or all if less than 10)
     random.seed(uuid)
     all_sections = []
-    for section, qlist in QUESTIONS_BY_SECTION.items():
+    current_questions = get_current_questions()
+    for section, qlist in current_questions.items():
+
         sample_count = min(10, len(qlist))  # Avoid sampling too many
         sampled = random.sample(qlist, sample_count)
         all_sections.append({"section": section, "questions": sampled})
