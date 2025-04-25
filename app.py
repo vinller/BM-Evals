@@ -26,30 +26,6 @@ with open("questions_grouped.json") as f:
 with open("questions_grouped.json") as f:
     grouped = json.load(f)
 
-def push_to_github():
-    try:
-        # Configure Git (do this once per session)
-        subprocess.run(["git", "config", "--global", "user.email", "bot@renderapp.com"], check=True)
-        subprocess.run(["git", "config", "--global", "user.name", "Render Bot"], check=True)
-
-        # Stage and commit changes
-        subprocess.run(["git", "add", "."], check=True)
-        subprocess.run(["git", "commit", "-m", "Auto-update questions from app"], check=True)
-
-        # Push to main branch explicitly
-        subprocess.run([
-            "git", "push",
-            f"https://{os.environ['GH_USERNAME']}:{os.environ['GH_TOKEN']}@github.com/{os.environ['GH_USERNAME']}/BM-Evals.git",
-            "HEAD:main"
-        ], check=True)
-
-        print("✅ Successfully pushed to GitHub")
-
-    except subprocess.CalledProcessError as e:
-        print(f"❌ Git push failed: {e}")
-
-
-
 # ---- Routes ----
 @app.route("/")
 def home():
@@ -214,8 +190,6 @@ def delete_questions(section_num):
     with open(QUESTIONS_FILE, "w") as f:
         json.dump(grouped, f, indent=2)
 
-        push_to_github()
-
     return jsonify({"status": "success"})
 
 @app.route("/questions/section_<int:section_num>/add", methods=["POST"])
@@ -233,9 +207,8 @@ def add_question(section_num):
     with open(QUESTIONS_FILE, "w") as f:
         json.dump(grouped, f, indent=2)
 
-        push_to_github()
-
     return jsonify({"status": "success"})
+
 if __name__ == "__main__":
     os.makedirs("History", exist_ok=True)
-    app.run(debug=True)
+    app.run()
