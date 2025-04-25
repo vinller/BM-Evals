@@ -9,6 +9,9 @@ from docx import Document
 from docx.shared import Pt
 from io import BytesIO
 
+import subprocess
+import os
+
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
@@ -22,6 +25,17 @@ with open("questions_grouped.json") as f:
 
 with open("questions_grouped.json") as f:
     grouped = json.load(f)
+
+def push_to_github():
+    try:
+        subprocess.run(["git", "config", "--global", "user.email", "you@example.com"])
+        subprocess.run(["git", "config", "--global", "user.name", os.environ.get("GH_USERNAME")])
+        subprocess.run(["git", "add", "questions_grouped.json"])
+        subprocess.run(["git", "commit", "-m", "Auto-update questions from app"])
+        subprocess.run(["git", "push", f"https://{os.environ.get('GH_USERNAME')}:{os.environ.get('GH_TOKEN')}@github.com/{os.environ.get('GH_USERNAME')}/BM-Evals.git"])
+        print("✅ Successfully pushed to GitHub.")
+    except Exception as e:
+        print("❌ Git push failed:", e)
 
 
 
