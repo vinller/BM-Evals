@@ -211,4 +211,5 @@ def add_question(section_num):
 
 if __name__ == "__main__":
     os.makedirs("History", exist_ok=True)
-    app.run()
+    # Only run the dev server if you’re not in production
+    app.run(debug=True)
