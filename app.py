@@ -203,6 +203,8 @@ def delete_questions(section_num):
     with open(QUESTIONS_FILE, "w") as f:
         json.dump(grouped, f, indent=2)
 
+        push_to_github()
+
     return jsonify({"status": "success"})
 
 @app.route("/questions/section_<int:section_num>/add", methods=["POST"])
@@ -219,6 +221,8 @@ def add_question(section_num):
 
     with open(QUESTIONS_FILE, "w") as f:
         json.dump(grouped, f, indent=2)
+
+        push_to_github()
 
     return jsonify({"status": "success"})
 if __name__ == "__main__":
