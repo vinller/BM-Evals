@@ -28,14 +28,25 @@ with open("questions_grouped.json") as f:
 
 def push_to_github():
     try:
-        subprocess.run(["git", "config", "--global", "user.email", "you@example.com"])
-        subprocess.run(["git", "config", "--global", "user.name", os.environ.get("GH_USERNAME")])
-        subprocess.run(["git", "add", "questions_grouped.json"])
-        subprocess.run(["git", "commit", "-m", "Auto-update questions from app"])
-        subprocess.run(["git", "push", f"https://{os.environ.get('GH_USERNAME')}:{os.environ.get('GH_TOKEN')}@github.com/{os.environ.get('GH_USERNAME')}/BM-Evals.git"])
-        print("✅ Successfully pushed to GitHub.")
-    except Exception as e:
-        print("❌ Git push failed:", e)
+        # Configure Git (do this once per session)
+        subprocess.run(["git", "config", "--global", "user.email", "bot@renderapp.com"], check=True)
+        subprocess.run(["git", "config", "--global", "user.name", "Render Bot"], check=True)
+
+        # Stage and commit changes
+        subprocess.run(["git", "add", "."], check=True)
+        subprocess.run(["git", "commit", "-m", "Auto-update questions from app"], check=True)
+
+        # Push to main branch explicitly
+        subprocess.run([
+            "git", "push",
+            f"https://{os.environ['GH_USERNAME']}:{os.environ['GH_TOKEN']}@github.com/{os.environ['GH_USERNAME']}/BM-Evals.git",
+            "HEAD:main"
+        ], check=True)
+
+        print("✅ Successfully pushed to GitHub")
+
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Git push failed: {e}")
 
 
 
