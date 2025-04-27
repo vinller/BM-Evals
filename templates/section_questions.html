@@ -5,81 +5,176 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Section {{ section_num }} Questions</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="icon" href="/static/icons/asu-logo2.png" type="image/png" />
 </head>
-<body class="bg-gray-900 text-white p-6 min-h-screen">
-  <div class="flex justify-between items-center mb-4">
-    <h1 class="text-xl font-bold">Section {{ section_num }}</h1>
-    <div class="flex gap-2">
-      <button onclick="toggleSelectMode()" class="bg-yellow-500 px-4 py-2 rounded">Select</button>
-      <button onclick="showAddModal()" class="bg-green-600 px-4 py-2 rounded">Add</button>
-      <a href="/questions" class="bg-blue-600 px-4 py-2 rounded">Back</a>
+<body class="font-sans">
+
+<!-- Top Bar -->
+<div class="flex justify-between items-center px-6 py-4 topbar">
+  <div class="flex items-center gap-4">
+    <img src="/static/icons/asu-logo2.png" alt="ASU Logo" class="h-10" />
+    <h1 class="text-2xl font-bold asu-gold">MU/STPV Evaluation Generator</h1>
+  </div>
+
+  <div class="flex items-center gap-4">
+    <!-- Home Button -->
+    <a href="/dashboard" class="asu-maroon asu-maroon-hover rounded-md p-2 flex items-center justify-center w-10 h-10">
+      <img src="/static/icons/house-icon.svg" alt="Home" class="w-6 h-6 invert" />
+    </a>
+
+    <!-- Logged In + Logout Together -->
+    <div class="flex items-center bg-black border border-gray-700 px-4 py-2 rounded-md gap-3">
+      <p class="text-sm font-medium">
+        Logged in as: <span class="font-semibold">{{ user.first_name }} {{ user.last_name }}</span>
+      </p>
+      <a href="/logout" title="Logout" class="logout-button hover:bg-red-700 w-8 h-8 flex items-center justify-center rounded-md">
+        <img src="/static/icons/right-bracket-icon.svg" alt="Logout" class="w-5 h-5 invert" />
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Body -->
+<div class="p-6 max-w-5xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold asu-gold">Section {{ section_num }}</h1>
+    <div class="flex gap-3">
+      <button onclick="toggleSelectMode()" class="asu-gold-bg asu-gold-bg-hover px-4 py-2 rounded text-black font-semibold">Select</button>
+      <button onclick="showAddModal()" class="asu-maroon asu-maroon-hover px-4 py-2 rounded font-semibold">Add</button>
+      <a href="/questions" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded font-semibold">Back</a>
     </div>
   </div>
 
   <form id="delete-form" class="space-y-3">
     {% for q in questions %}
-    <div class="bg-gray-800 p-4 rounded flex items-start gap-3">
-      <input type="checkbox" name="q" value="{{ q.q }}" class="hidden checkbox">
-      <div>
-        <p class="font-semibold">Q: {{ q.q }}</p>
-        <p class="text-gray-400 text-sm">A: {{ q.a }}</p>
+    <div class="section-card p-6 rounded flex items-start justify-between group relative">
+        <!-- Checkbox (hidden unless in select mode) -->
+        <div class="flex items-center gap-4">
+          <input type="checkbox" name="q" value="{{ q.q }}"
+            class="hidden checkbox w-5 h-5 accent-[#8C1D40] focus:ring-2 focus:ring-[#FFC627] rounded">
+      
+          <!-- Question and Answer Text -->
+          <div class="space-y-2">
+            <p class="text-lg font-bold">
+              Question:
+              <span class="font-normal">{{ q.q }}</span>
+            </p>
+            <p class="text-gray-400 text-base">
+              Answer:
+              <span class="font-normal">{{ q.a }}</span>
+            </p>
+          </div>
+        </div>
+      
+        <!-- Edit Button Centered -->
+        <button type="button"
+          class="hidden group-hover:flex absolute top-1/2 right-4 transform -translate-y-1/2 asu-maroon asu-maroon-hover p-2 rounded"
+          data-q="{{ q.q }}"
+          data-a="{{ q.a }}"
+          onclick="openEdit(this)">
+          <img src="/static/icons/pen-to-square.svg" alt="Edit" class="w-5 h-5 filter invert brightness-200" />
+        </button>
       </div>
-    </div>
+      
     {% endfor %}
-    <button type="button" onclick="deleteSelected()" class="hidden mt-4 bg-red-600 px-4 py-2 rounded" id="delete-btn">Delete Selected</button>
+    <button type="button" onclick="deleteSelected()" class="hidden mt-6 asu-maroon asu-maroon-hover px-4 py-2 rounded font-semibold" id="delete-btn">Delete Selected</button>
   </form>
+</div>
 
-  <!-- Add Modal -->
-  <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-    <div class="bg-gray-800 p-6 rounded w-full max-w-md">
-      <h2 class="text-xl font-semibold mb-4">Add New Question</h2>
-      <input id="new-q" placeholder="Question" class="text-black w-full p-2 rounded mb-3" />
-      <input id="new-a" placeholder="Answer" class="text-black w-full p-2 rounded mb-4" />
-      <div class="flex justify-end gap-2">
-        <button onclick="hideAddModal()" class="bg-gray-600 px-4 py-2 rounded">Cancel</button>
-        <button onclick="addQuestion()" class="bg-green-600 px-4 py-2 rounded">Save</button>
-      </div>
+<!-- Add Modal -->
+<div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+  <div class="bg-[#1a1a1a] p-6 rounded-lg w-full max-w-md space-y-4">
+    <h2 class="text-2xl font-bold asu-gold">Add New Question</h2>
+    <textarea id="new-q" placeholder="Question" class="text-black w-full p-2 rounded h-32 resize-y"></textarea>
+    <textarea id="new-a" placeholder="Answer" class="text-black w-full p-2 rounded h-24 resize-y"></textarea>
+    <div class="flex justify-end gap-2">
+      <button onclick="hideAddModal()" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded">Cancel</button>
+      <button onclick="addQuestion()" class="asu-maroon asu-maroon-hover px-4 py-2 rounded">Save</button>
     </div>
   </div>
+</div>
 
-  <script>
-    let selectMode = false;
-    function toggleSelectMode() {
-      selectMode = !selectMode;
-      document.querySelectorAll('.checkbox').forEach(cb => {
-        cb.classList.toggle('hidden', !selectMode);
-      });
-      document.getElementById('delete-btn').classList.toggle('hidden', !selectMode);
-    }
+<!-- Edit Modal -->
+<div id="edit-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+  <div class="bg-[#1a1a1a] p-6 rounded-lg w-full max-w-md space-y-4">
+    <h2 class="text-2xl font-bold asu-gold">Edit Question</h2>
+    <textarea id="edit-q" placeholder="Question" class="text-black w-full p-2 rounded h-32 resize-y"></textarea>
+    <textarea id="edit-a" placeholder="Answer" class="text-black w-full p-2 rounded h-24 resize-y"></textarea>
+    <div class="flex justify-end gap-2">
+      <button onclick="hideEditModal()" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded">Cancel</button>
+      <button onclick="saveEdit()" class="asu-maroon asu-maroon-hover px-4 py-2 rounded">Save</button>
+    </div>
+  </div>
+</div>
 
-    function showAddModal() {
-      document.getElementById('modal').classList.remove('hidden');
-    }
+<script>
+let selectMode = false;
+let editingOldQuestion = "";
 
-    function hideAddModal() {
-      document.getElementById('modal').classList.add('hidden');
-    }
+function toggleSelectMode() {
+  selectMode = !selectMode;
+  document.querySelectorAll('.checkbox').forEach(cb => cb.classList.toggle('hidden', !selectMode));
+  document.getElementById('delete-btn').classList.toggle('hidden', !selectMode);
+}
 
-    function addQuestion() {
-      const q = document.getElementById('new-q').value.trim();
-      const a = document.getElementById('new-a').value.trim();
-      if (!q || !a) return alert('Both fields are required');
-      fetch(`/questions/section_{{ section_num }}/add`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ q, a })
-      }).then(() => location.reload());
-    }
+function showAddModal() {
+  document.getElementById('modal').classList.remove('hidden');
+}
 
-    function deleteSelected() {
-      const toDelete = Array.from(document.querySelectorAll('input[name=q]:checked')).map(cb => cb.value);
-      if (toDelete.length === 0) return;
-      fetch(`/questions/section_{{ section_num }}/delete`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ questions: toDelete })
-      }).then(() => location.reload());
-    }
-  </script>
+function hideAddModal() {
+  document.getElementById('modal').classList.add('hidden');
+}
+
+function openEdit(button) {
+  const q = button.getAttribute('data-q');
+  const a = button.getAttribute('data-a');
+  showEditModal(q, a);
+}
+
+function showEditModal(q, a) {
+  editingOldQuestion = q;
+  document.getElementById('edit-q').value = q;
+  document.getElementById('edit-a').value = a;
+  document.getElementById('edit-modal').classList.remove('hidden');
+}
+
+function hideEditModal() {
+  document.getElementById('edit-modal').classList.add('hidden');
+}
+
+function addQuestion() {
+  const q = document.getElementById('new-q').value.trim();
+  const a = document.getElementById('new-a').value.trim();
+  if (!q || !a) return alert('Both fields are required');
+  fetch(`/questions/section_{{ section_num }}/add`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ q, a })
+  }).then(() => location.reload());
+}
+
+function saveEdit() {
+  const newQ = document.getElementById('edit-q').value.trim();
+  const newA = document.getElementById('edit-a').value.trim();
+  if (!newQ || !newA) return alert('Both fields are required');
+  fetch(`/questions/section_{{ section_num }}/edit`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ old_q: editingOldQuestion, new_q: newQ, new_a: newA })
+  }).then(() => location.reload());
+}
+
+function deleteSelected() {
+  const toDelete = Array.from(document.querySelectorAll('input[name=q]:checked')).map(cb => cb.value);
+  if (toDelete.length === 0) return;
+  fetch(`/questions/section_{{ section_num }}/delete`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ questions: toDelete })
+  }).then(() => location.reload());
+}
+</script>
+
 </body>
 </html>

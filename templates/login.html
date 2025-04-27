@@ -3,14 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login | BM Evaluation</title>
+  <title>Login | MU/STPV Evaluation Generator</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="icon" href="/static/icons/asu-logo2.png" type="image/png" />
 </head>
-<body class="bg-[#000000] text-white flex items-center justify-center h-screen">
-  <form method="POST" action="/login" class="bg-[#1f1f1f] border border-[#8C1D40] p-8 rounded-lg shadow-lg w-96 space-y-6">
+<body class="bg-black text-white flex items-center justify-center h-screen">
+
+  <form method="POST" action="/login" class="section-card border border-[#8C1D40] p-8 rounded-lg shadow-lg w-96 space-y-6">
     <div class="text-center">
-      <h1 class="text-3xl font-extrabold text-[#FFC627]">MU & STPV</h1>
-      <p class="text-sm text-[#FFFFFF]">Building Manager Evaluation Tool Login</p>
+      <img src="/static/icons/asu-logo.png" alt="ASU Logo" class="h-12 mx-auto mb-2">
+      <h1 class="text-3xl font-extrabold asu-gold">MU & STPV</h1>
+      <p class="text-sm text-gray-300">Building Manager Evaluation Tool Login</p>
     </div>
 
     {% if error %}
@@ -18,16 +22,19 @@
     {% endif %}
 
     <div>
-      <label for="email" class="block mb-1 text-[#FFC627] font-medium">Email</label>
+      <label for="email" class="block mb-1 asu-gold font-medium">Email</label>
       <input type="email" id="email" name="email" class="w-full p-2 rounded bg-[#2c2c2c] text-white border border-[#8C1D40]" required>
     </div>
+
     <div>
-      <label for="password" class="block mb-1 text-[#FFC627] font-medium">Password</label>
+      <label for="password" class="block mb-1 asu-gold font-medium">Password</label>
       <input type="password" id="password" name="password" class="w-full p-2 rounded bg-[#2c2c2c] text-white border border-[#8C1D40]" required>
     </div>
-    <button type="submit" class="w-full bg-[#8C1D40] hover:bg-[#a1224c] text-white font-semibold py-2 px-4 rounded transition duration-200">
+
+    <button type="submit" class="w-full asu-maroon asu-maroon-hover text-white font-semibold py-2 px-4 rounded transition duration-200">
       Login
     </button>
   </form>
+
 </body>
 </html>

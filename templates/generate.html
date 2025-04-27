@@ -5,36 +5,126 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Generate Evaluations</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="icon" href="/static/icons/asu-logo2.png" type="image/png" />
 </head>
-<body class="bg-gray-900 text-white min-h-screen">
-  <!-- Header -->
-  <div class="flex justify-between items-center px-6 py-4 bg-gray-800">
-    <h1 class="text-2xl font-bold">BM Evaluation Tool</h1>
-    <div class="flex items-center gap-4">
-      <a href="/dashboard" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white font-medium">Home</a>
-      <p class="text-sm font-medium">Logged in as: <span class="font-semibold">{{ user.first_name }} {{ user.last_name }}</span></p>
-      <a href="/logout" class="w-10 h-10 flex items-center justify-center bg-red-600 hover:bg-red-700 rounded-md" title="Logout">
-        <span class="material-symbols-outlined">logout</span>
+<body class="min-h-screen font-sans">
+
+<!-- Header -->
+<div class="flex justify-between items-center px-6 py-4 topbar">
+  <div class="flex items-center gap-4">
+    <img src="/static/icons/asu-logo2.png" alt="ASU Logo" class="h-10" />
+    <h1 class="text-2xl font-bold asu-gold">MU/STPV Evaluation Generator</h1>
+  </div>
+
+  <div class="flex items-center gap-4">
+    <a href="/dashboard" class="asu-maroon asu-maroon-hover rounded-md p-2 flex items-center justify-center w-10 h-10">
+      <img src="/static/icons/house-icon.svg" alt="Home" class="w-6 h-6 invert" />
+    </a>
+
+    <div class="flex items-center bg-black border border-gray-700 px-4 py-2 rounded-md gap-3">
+      <p class="text-sm font-medium">
+        Logged in as: <span class="font-semibold">{{ user.first_name }} {{ user.last_name }}</span>
+      </p>
+      <a href="/logout" title="Logout" class="logout-button hover:bg-red-700 w-8 h-8 flex items-center justify-center rounded-md">
+        <img src="/static/icons/right-bracket-icon.svg" alt="Logout" class="w-5 h-5 invert" />
       </a>
     </div>
   </div>
+</div>
 
-  <!-- Content -->
-  <div class="p-6 max-w-2xl mx-auto space-y-6">
-    <h2 class="text-3xl font-bold">Generate Evaluations</h2>
-    <form method="POST" action="/generate" class="space-y-6">
-      <label class="block">
-        Number of Sets (1-10):
-        <select name="set_count" class="text-black p-2 mt-1 rounded w-full">
-          {% for i in range(1, 11) %}
-          <option value="{{ i }}">{{ i }}</option>
-          {% endfor %}
-        </select>
-      </label>
-    
-      <button type="submit" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded text-white font-semibold">Generate</button>
-    </form>
+<!-- Content -->
+<div class="p-6 max-w-2xl mx-auto space-y-8 mt-10">
+  <h2 class="text-3xl font-bold text-center asu-gold">Generate Evaluations</h2>
+
+  <form method="POST" action="/generate" class="section-card p-6 rounded-lg space-y-6 shadow-lg">
+
+    <!-- Number of Sets -->
+    <div>
+      <label for="set_count" class="block font-semibold mb-2 asu-gold">Number of Sets (1-10)</label>
+      <select name="set_count" id="set_count" class="text-black p-2 rounded w-full">
+        {% for i in range(1, 11) %}
+        <option value="{{ i }}">{{ i }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Include Student Copy -->
+    <div>
+      <label for="student_copy" class="block font-semibold mb-2 asu-gold">Include Student Copy?</label>
+      <select name="student_copy" id="student_copy" class="text-black p-2 rounded w-full">
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+    </div>
+
+    <!-- Filename Format -->
+    <div>
+      <label for="filename_format" class="block font-semibold mb-2 asu-gold">Filename Format</label>
+      <select name="filename_format" id="filename_format" class="text-black p-2 rounded w-full">
+        <option value="month">Month Year (ex: April 2025)</option>
+        <option value="term">Term Year (ex: Spring 2025)</option>
+        <option value="date">Date (ex: 2025-04-26)</option>
+      </select>
+    </div>
+
+    <!-- Sections to Include -->
+<!-- Sections to Include -->
+<div class="flex justify-between items-center mb-2">
+    <label class="font-semibold asu-gold">Sections to Include</label>
+    <button type="button" id="toggle-sections-btn"
+      onclick="toggleSections()" 
+      class="asu-maroon asu-maroon-hover text-white text-xs py-1 px-3 rounded">
+      Select All
+    </button>
   </div>
+  
+  <p class="text-xs text-gray-400 mb-2">Leave blank to include all sections by default.</p>
+  
+  <div class="grid grid-cols-2 gap-2">
+    {% for i in range(1, 11) %}
+    <label class="flex items-center gap-2">
+      <input type="checkbox" name="sections" value="{{ i }}"
+        class="w-5 h-5 accent-[#8C1D40] focus:ring-2 focus:ring-[#FFC627] rounded">
+      <span>Section {{ i }}</span>
+    </label>
+    {% endfor %}
+  </div>
+  
+    <!-- Custom Score Threshold -->
+    <div>
+      <label for="score_threshold" class="block font-semibold mb-2 asu-gold">Custom Score Threshold (%)</label>
+      <input type="number" id="score_threshold" name="score_threshold" placeholder="Default 80%" class="text-black p-2 rounded w-full" min="0" max="100">
+    </div>
+
+    <!-- Evaluation Title -->
+    <div>
+      <label for="evaluation_title" class="block font-semibold mb-2 asu-gold">Evaluation Title (optional)</label>
+      <input type="text" id="evaluation_title" name="evaluation_title" placeholder="Spring 2025 Midterm Eval" class="text-black p-2 rounded w-full">
+    </div>
+
+    <!-- Submit Button -->
+    <div class="flex justify-center">
+      <button type="submit" class="action-button asu-maroon asu-maroon-hover text-white">
+        Generate
+      </button>
+    </div>
+
+  </form>
+</div>
+<script>
+    let allSelected = false;
+    
+    function toggleSections() {
+      const checkboxes = document.querySelectorAll('input[name="sections"]');
+      allSelected = !allSelected;
+    
+      checkboxes.forEach(cb => cb.checked = allSelected);
+    
+      const toggleBtn = document.getElementById('toggle-sections-btn');
+      toggleBtn.textContent = allSelected ? "Deselect All" : "Select All";
+    }
+    </script>
+    
 </body>
 </html>

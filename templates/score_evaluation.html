@@ -1,10 +1,10 @@
-<!-- templates/results.html -->
+<!-- templates/score_evaluation.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Log Results</title>
+  <title>Score Evaluation</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/static/style.css" />
   <link rel="icon" href="/static/icons/asu-logo2.png" type="image/png" />
@@ -36,22 +36,36 @@
     </div>
   </div>
 
-<!-- Search UUID -->
-<div class="flex justify-center mt-20">
-  <div class="section-card p-8 rounded-lg space-y-6 shadow-lg w-full max-w-lg">
-    <h2 class="text-2xl font-bold text-center asu-gold">Log Evaluation Results</h2>
-    <form method="POST" action="/results">
-      <div class="space-y-4">
-        <div>
-          <label for="uuid" class="block font-semibold asu-gold mb-2">Evaluation UUID</label>
-          <input type="text" name="uuid" id="uuid" placeholder="Enter UUID (ex: TR0BYU)" class="w-full p-2 rounded text-black" required>
-        </div>
-        <div class="flex justify-center">
-          <button type="submit" class="action-button asu-maroon asu-maroon-hover text-white">Start Scoring</button>
-        </div>
+<div class="p-6 max-w-3xl mx-auto mt-10">
+  <h2 class="text-3xl font-bold text-center asu-gold mb-8">Scoring Evaluation</h2>
+
+  <form id="score-form" method="POST" action="/results/save">
+    <input type="hidden" name="uuid" value="{{ uuid }}">
+    <input type="hidden" name="threshold" value="{{ threshold }}">
+
+    <div class="space-y-4 mb-8">
+      {% for q in questions %}
+      <div class="section-card p-4 rounded space-y-2">
+        <p class="font-semibold">Question {{ loop.index }}:</p>
+        <p class="text-gray-300">{{ q }}</p>
+        <select name="score_{{ loop.index }}" class="w-full p-2 mt-2 rounded text-black">
+          <option value="2">2 - Full Credit</option>
+          <option value="1">1 - Partial Credit</option>
+          <option value="0">0 - Incorrect</option>
+        </select>
       </div>
-    </form>
-  </div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-6">
+      <label class="block font-semibold asu-gold mb-2">Candidate Name</label>
+      <input type="text" name="candidate_name" class="w-full p-2 rounded text-black" required>
+    </div>
+
+    <div class="flex justify-center">
+      <button type="submit" class="action-button asu-maroon asu-maroon-hover text-white">Submit Results</button>
+    </div>
+  </form>
 </div>
 
 </body>

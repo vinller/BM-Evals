@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Result</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body id="popup-body" class="text-white min-h-screen flex flex-col justify-center items-center">
+    <h1 id="popup-status" class="text-6xl font-extrabold">{{ status }}</h1>
+    <p id="countdown" class="mt-6 text-2xl font-medium">Returning to Dashboard in 10 seconds...</p>
+  
+    <script>
+      let countdown = 10;
+      const countdownText = document.getElementById('countdown');
+      const popupBody = document.getElementById('popup-body');
+      const popupStatus = document.getElementById('popup-status');
+  
+      // Set background based on status
+      const status = "{{ status }}".trim();
+      if (status === "PASS!!") {
+        popupBody.classList.add('bg-green-600');
+      } else if (status === "FAIL") {
+        popupBody.classList.add('bg-red-600');
+      } else {
+        popupBody.classList.add('bg-black'); // fallback
+      }
+  
+      // Countdown
+      function updateCountdown() {
+        countdown--;
+        countdownText.innerText = `Returning to Dashboard in ${countdown} seconds...`;
+        if (countdown <= 0) {
+          window.location.href = "/dashboard";
+        }
+      }
+  
+      setInterval(updateCountdown, 1000);
+    </script>
+  </body>
+  
+  
+</html>

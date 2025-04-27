@@ -1,0 +1,64 @@
+/* ASU Web Theme */
+body {
+    background-color: #000000; /* ASU Black background */
+    font-family: 'Roboto', sans-serif;
+    color: white;
+  }
+  
+  /* Top bar */
+  .topbar {
+    background-color: #000000;
+  }
+  
+  /* Logo text */
+  .asu-gold {
+    color: #FFC627;
+  }
+  
+  /* Buttons */
+  .asu-maroon {
+    background-color: #8C1D40;
+  }
+  
+  .asu-maroon-hover:hover {
+    background-color: #6f1936;
+  }
+  
+  .asu-gold-bg {
+    background-color: #FFC627;
+  }
+  
+  .asu-gold-bg-hover:hover {
+    background-color: #e6b400;
+  }
+  
+  .logout-button {
+    background-color: #dc2626; /* Tailwind red-600 */
+  }
+  
+  .logout-button:hover {
+    background-color: #b91c1c; /* Tailwind red-700 */
+  }
+  
+  /* Section Cards */
+  .section-card {
+    background-color: #1a1a1a; /* Dark gray, not pure black */
+    border: 1px solid #333333; /* Light gray border */
+    transition: background-color 0.3s;
+  }
+  
+  /* No hover box-glow anymore! */
+  .section-card:hover {
+    background-color: #222222;
+  }
+  
+  
+  /* Button general style */
+  .action-button {
+    padding: 1rem 2rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    text-align: center;
+  }
+  
+  

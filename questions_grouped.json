@@ -5,12 +5,12 @@
       "a": "Oversees operations and ensures safety in the building."
     },
     {
-      "q": "How do you open a shift?",
-      "a": "By performing a building walkthrough and checking in with Event Assistants."
+      "q": "this is a test\nto see if multiple lines work",
+      "a": "anyways"
     },
     {
-      "q": "Which of the following should you not do if you are inside the building and active shooting is taking place? \na. If safe, exit the building and call 9-11 \nb. If you cannot leave, secure your area \nc. Yell for help \nd. Silence your cell phones",
-      "a": "true"
+      "q": "hello this is the new question",
+      "a": "anyways"
     }
   ],
   "Section 2 - blah": [
@@ -91,16 +91,8 @@
   ],
   "Section 10 - blah": [
     {
-      "q": "Where is the AED located?",
-      "a": "Next to the information desk on the first floor."
-    },
-    {
-      "q": "hello there",
-      "a": "hows it going"
-    },
-    {
-      "q": "k",
-      "a": "k"
+      "q": "just for fn",
+      "a": "asdljkvg"
     }
   ]
 }

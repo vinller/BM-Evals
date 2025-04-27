@@ -1,0 +1,66 @@
+[
+  {
+    "uuid": "3YYTSL",
+    "title": "BM Evaluation April 2025",
+    "score": 20,
+    "threshold": 80,
+    "evaluator": "Vinny Panchal",
+    "status": "FAIL"
+  },
+  {
+    "uuid": "3YYTSL",
+    "candidate_name": "Kavya Chandrasekar",
+    "evaluator": "Vinny Panchal",
+    "score": 50,
+    "threshold": 80,
+    "status": "FAIL"
+  },
+  {
+    "uuid": "3YYTSL",
+    "candidate_name": "Kavya Chandrasekar",
+    "evaluator": "Vinny Panchal",
+    "score": 83,
+    "threshold": 80,
+    "status": "PASS"
+  },
+  {
+    "uuid": "3YYTSL",
+    "candidate_name": "Kavya Chandrasekar",
+    "evaluator": "Vinny Panchal",
+    "score": 100,
+    "threshold": 80,
+    "status": "PASS"
+  },
+  {
+    "uuid": "3YYTSL",
+    "candidate_name": "Kavya Chandrasekar",
+    "evaluator": "Vinny Panchal",
+    "score": 100,
+    "threshold": 80,
+    "status": "PASS"
+  },
+  {
+    "uuid": "3YYTSL",
+    "candidate_name": "Kavya Chandrasekar",
+    "evaluator": "Vinny Panchal",
+    "score": 100,
+    "threshold": 80,
+    "status": "PASS"
+  },
+  {
+    "uuid": "3YYTSL",
+    "candidate_name": "Kavya Chandrasekar",
+    "evaluator": "Vinny Panchal",
+    "score": 100,
+    "threshold": 80,
+    "status": "PASS!!"
+  },
+  {
+    "uuid": "3YYTSL",
+    "candidate_name": "Kavya Chandrasekar",
+    "evaluator": "Vinny Panchal",
+    "score": 33,
+    "threshold": 80,
+    "status": "FAIL"
+  }
+]
