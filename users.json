@@ -3,13 +3,15 @@
       "first_name": "Vinny",
       "last_name": "Panchal",
       "email": "vinny.24@asu.edu",
-      "password": "admin123"
+      "password": "admin123",
+      "role": "admin"
     },
     "admin2": {
       "first_name": "Yakima",
       "last_name": "Melton",
       "email": "yakima.melton@asu.edu",
-      "password": "ymelton@mu"
+      "password": "ymelton@mu",
+      "role": "candidate"
     },
     "admin3": {
       "first_name": "Olivia",

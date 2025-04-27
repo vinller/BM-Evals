@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Take Evaluation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body class="font-sans min-h-screen bg-black text-white">
+
+  <!-- Top Bar -->
+  <div class="flex justify-between items-center px-6 py-4 topbar">
+    <div class="flex items-center gap-4">
+      <img src="/static/icons/asu-logo2.png" alt="ASU Logo" class="h-10" />
+      <h1 class="text-2xl font-bold asu-gold">Take Your Evaluation</h1>
+    </div>
+    <a href="/logout" class="asu-maroon asu-maroon-hover rounded-md p-2 flex items-center justify-center w-10 h-10">
+      <img src="/static/icons/right-bracket-icon.svg" alt="Logout" class="w-6 h-6 invert" />
+    </a>
+  </div>
+
+  <!-- Evaluation Form -->
+  <div class="p-8 max-w-4xl mx-auto space-y-6">
+    <h2 class="text-xl font-semibold asu-gold mb-4">Evaluation ID: {{ eval_data['uuid'] }}</h2>
+
+    <form action="/submit_evaluation/{{ eval_data['uuid'] }}" method="POST">
+      {% for idx, question in enumerate(eval_data['questions']) %}
+        <div class="bg-gray-800 p-4 rounded mb-4">
+          <p class="font-semibold">{{ question['q'] }}</p>
+          <textarea name="answer_{{ idx }}" rows="4" class="w-full p-2 mt-2 rounded bg-gray-700 text-white" placeholder="Your answer here..." required></textarea>
+        </div>
+      {% endfor %}
+
+      <button type="submit" class="asu-maroon asu-maroon-hover px-6 py-2 rounded text-white">Submit Evaluation</button>
+    </form>
+
+    <div class="text-lg mt-4">
+      <p>Time remaining: <span id="timer">02:00:00</span></p>
+    </div>
+  </div>
+
+  <script>
+    // Countdown Timer (2 hours)
+    let timer = 7200; // 2 hours in seconds
+    setInterval(function() {
+      let hours = Math.floor(timer / 3600);
+      let minutes = Math.floor((timer % 3600) / 60);
+      let seconds = timer % 60;
+      document.getElementById("timer").textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      if (timer > 0) timer--;
+    }, 1000);
+  </script>
+
+</body>
+</html>

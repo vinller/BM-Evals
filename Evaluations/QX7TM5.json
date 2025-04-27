@@ -1,0 +1,19 @@
+{
+  "uuid": "QX7TM5",
+  "title": "BM Evaluation April 2025",
+  "threshold": 80,
+  "questions": [
+    {
+      "q": "What does a Building Manager do?",
+      "a": "Oversees operations and ensures safety in the building."
+    },
+    {
+      "q": "hello this is the new question",
+      "a": "anyways"
+    },
+    {
+      "q": "this is a test\nto see if multiple lines work",
+      "a": "anyways"
+    }
+  ]
+}

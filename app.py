@@ -41,10 +41,18 @@ def login():
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
+        
         for user_id, info in USERS.items():
+            # Check if email and password match
             if info["email"] == email and info["password"] == password:
                 session["user"] = info
-                return redirect("/dashboard")
+                
+                # Redirect to respective dashboard based on role
+                if info["role"] == "admin":
+                    return redirect("/dashboard")
+                elif info["role"] == "candidate":
+                    return redirect("/candidate_dashboard")  # Redirect to take evaluation for candidates
+                
         return render_template("login.html", error="Invalid credentials")
     return render_template("login.html")
 
@@ -113,18 +121,25 @@ def generate():
 
         zip_buffer.seek(0)
         zip_filename = f"{prefix} {count} Set{'s' if count > 1 else ''}.zip"
-        return send_file(zip_buffer, as_attachment=True, download_name=zip_filename)
+        
+        zip_path = os.path.join("History", zip_filename)
+        with open(zip_path, "wb") as f:
+            f.write(zip_buffer.read())
+
+# Redirect to the download ready page
+        return redirect(url_for('download_ready', filename=zip_filename))
+    
 
     return render_template("generate.html", user=session["user"])
 
 def generate_doc(uuid, copy_type, user, prefix, selected_sections, eval_title, include_answers=False, score_threshold=80):
     doc = Document()
     evaluation_data = {
-        "uuid": uuid,
-        "title": eval_title if eval_title else f"BM Evaluation {prefix}",
-        "threshold": score_threshold,
-        "questions": []
-    }
+    "uuid": uuid,
+    "title": eval_title if eval_title else f"BM Evaluation {prefix}",
+    "threshold": score_threshold,
+    "questions": []
+}
 
     # Heading
     if eval_title:
@@ -181,9 +196,9 @@ def generate_doc(uuid, copy_type, user, prefix, selected_sections, eval_title, i
 
             # Save question and answer for the JSON
             evaluation_data["questions"].append({
-                "q": q["q"],
-                "a": q["a"]
-            })
+    "q": q["q"],
+    "a": q["a"]
+})
 
             if copy_type == "Student Copy":
                 doc.add_paragraph("\n\n\n\n")
@@ -198,11 +213,34 @@ def generate_doc(uuid, copy_type, user, prefix, selected_sections, eval_title, i
 
     # ONLY save the evaluation JSON once per evaluation
     if copy_type == "Student Copy":  # Only once
-        os.makedirs("evaluations", exist_ok=True)
-        with open(f"evaluations/{uuid}.json", "w") as f:
-            json.dump(evaluation_data, f, indent=2)
+        os.makedirs("Evaluations", exist_ok=True)
+    with open(f"Evaluations/{uuid}.json", "w") as f:
+        json.dump(evaluation_data, f, indent=2)
 
     return doc
+
+@app.route("/download_ready/<filename>")
+def download_ready(filename):
+    return render_template("download_ready.html", filename=filename, user=session["user"])
+
+@app.route("/score/<uuid>")
+def start_scoring(uuid):
+    if "user" not in session:
+        return redirect("/login")
+
+    try:
+        with open(f"Evaluations/{uuid}.json") as f:
+            eval_data = json.load(f)
+    except FileNotFoundError:
+        return "Evaluation not found", 404
+
+    return render_template("score_evaluation.html",
+        uuid=uuid,
+        questions=eval_data["questions"],
+        threshold=eval_data["threshold"],
+        user=session["user"]
+    )
+
 
 @app.route("/lookup", methods=["GET", "POST"])
 def lookup():
@@ -325,52 +363,256 @@ def results_page():
     
     return render_template("results.html", user=session["user"])
 
-
 @app.route("/results/save", methods=["POST"])
 def save_result():
     if "user" not in session:
         return redirect("/login")
     
+    # Collect form data
     uuid = request.form.get("uuid")
     threshold = int(request.form.get("threshold", 80))
-    candidate_name = request.form.get("candidate_name")
-    evaluator = f"{session['user']['first_name']} {session['user']['last_name']}"
-
+    candidate_name = request.form.get("candidate_name")  # Candidate's name from the form
+    date_taken = request.form.get("date_taken")  # Date when the evaluation was taken
+    evaluator = f"{session['user']['first_name']} {session['user']['last_name']}"  # Evaluator's name
+    
+    # Initialize variables to calculate score and details
     scores = []
     total_score = 0
+    details = []  # This will hold 'c' for correct, 'p' for partial, 'w' for wrong
 
+    # Loop through the scores from the form and calculate total score and details
     for key in request.form.keys():
         if key.startswith("score_"):
-            score = int(request.form.get(key))
+            score = int(request.form.get(key))  # Extract score
             scores.append(score)
             total_score += score
+            if score == 2:
+                details.append("c")  # Correct
+            elif score == 1:
+                details.append("p")  # Partial credit
+            else:
+                details.append("w")  # Wrong
 
+    # Calculate the total percentage score
     percent = (total_score / (len(scores) * 2)) * 100
-    status = "PASS!!" if percent >= threshold else "FAIL"
+    status = "PASS" if percent >= threshold else "FAIL"  # Determine if it's a pass or fail
 
-    # Save into results.json
-    results_file = "results.json"
+    # File to store results
+    results_file = "online_evals.json"
+    
+    # Create the file if it doesn't exist
     if not os.path.exists(results_file):
         with open(results_file, "w") as f:
             json.dump([], f, indent=2)
-
+    
+    # Read existing results
     with open(results_file) as f:
         data = json.load(f)
-    
+
+    # Add the new result to the list
     data.append({
         "uuid": uuid,
         "candidate_name": candidate_name,
+        "date_taken": date_taken,
         "evaluator": evaluator,
-        "score": round(percent),
+        "score": round(percent),  # Rounded score
         "threshold": threshold,
-        "status": status
+        "status": status,
+        "details": details,  # Store details about each question (correct/partial/wrong)
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Record the time the evaluation was saved
     })
 
+    # Write the updated data back to the results file
     with open(results_file, "w") as f:
         json.dump(data, f, indent=2)
 
+    # Render result popup with pass/fail status
     return render_template("popup_result.html", status=status)
 
+@app.route("/results/check/<uuid>")
+def check_result(uuid):
+    if not os.path.exists("results.json"):
+        return jsonify({"exists": False})
+
+    with open("results.json") as f:
+        results = json.load(f)
+
+    exists = any(entry["uuid"].upper() == uuid.upper() for entry in results)
+    return jsonify({"exists": exists})
+
+@app.route("/score_lookup", methods=["GET", "POST"])
+def score_lookup():
+    if "user" not in session:
+        return redirect("/login")
+
+    candidates = []
+    if os.path.exists("results.json"):
+        with open("results.json") as f:
+            results = json.load(f)
+            candidates = list({r["candidate_name"] for r in results})
+
+    if request.method == "POST":
+        uuid = request.form.get("uuid", "").strip().upper()
+        candidate = request.form.get("candidate", "").strip()
+
+        if uuid:
+            return redirect(url_for("candidate_profile", uuid=uuid))
+        elif candidate:
+            with open("results.json") as f:
+                results = json.load(f)
+                for r in results:
+                    if r["candidate_name"].lower() == candidate.lower():
+                        return redirect(url_for("candidate_profile", uuid=r["uuid"]))
+
+    return render_template("score_lookup.html", candidates=candidates, user=session["user"])
+@app.route("/candidate/<uuid>")
+def candidate_profile(uuid):
+    if "user" not in session:
+        return redirect("/login")
+    try:
+        # Load results.json
+        with open("results.json") as f:
+            results = json.load(f)
+
+        # Find the specific evaluation record
+        record = next((r for r in results if r["uuid"].upper() == uuid.upper()), None)
+        if not record:
+            return "Candidate not found.", 404
+
+        # Find matching evaluator DOCX
+        matching_docx = None
+        history_folder = "History"
+        if os.path.exists(history_folder):
+            for file in os.listdir(history_folder):
+                if uuid.upper() in file and "Evaluator" in file:
+                    matching_docx = file
+                    break
+
+        if not matching_docx:
+            matching_docx = "None found"
+
+        # Load the evaluation questions
+        eval_file_path = f"Evaluations/{uuid.upper()}.json"
+        if not os.path.exists(eval_file_path):
+            return "Evaluation file not found.", 404
+
+        with open(eval_file_path) as f:
+            eval_data = json.load(f)
+
+        # Find all past evaluations of this candidate
+        candidate_name = record["candidate_name"]
+        # Load all past evaluations by the candidate
+        past_evals = []
+        with open("results.json") as f:
+            all_results = json.load(f)
+        for r in all_results:
+            if r["candidate_name"].lower() == record["candidate_name"].lower():
+                past_evals.append({
+                    "uuid": r["uuid"],
+                    "status": r["status"],
+                    "score": r["score"],
+                    "date": r.get("date", "N/A")
+            })
+
+        return render_template(
+            "candidate_profile.html",
+            record=record,
+            questions=eval_data["questions"],
+            threshold=eval_data["threshold"],
+            docx_filename=matching_docx,
+            uuid=uuid,
+            user=session["user"],
+            enumerate=enumerate,
+            past_evals=past_evals
+        )
+
+    except Exception as e:
+        print(f"Error loading candidate profile: {e}")
+    return "Error loading candidate profile.", 500
+
+@app.route("/lookup_score", methods=["POST"])
+def lookup_score():
+    uuid = request.form.get("uuid")
+    candidate = request.form.get("candidate")
+
+    # Priority: if UUID provided, use that
+    if uuid:
+        return redirect(url_for("candidate_profile", uuid=uuid.upper()))
+    elif candidate:
+        # Look up UUID from candidate name in results.json
+        try:
+            with open("results.json") as f:
+                results = json.load(f)
+            for record in results:
+                if record["candidate_name"].lower() == candidate.lower():
+                    return redirect(url_for("candidate_profile", uuid=record["uuid"]))
+        except Exception as e:
+            print(e)
+            return "Error finding candidate", 500
+
+    return "Invalid lookup", 400
+
+def fix_results_file():
+    results_file = "results.json"
+
+    try:
+        with open(results_file) as f:
+            results = json.load(f)
+        
+        updated = False
+
+        for entry in results:
+            # If 'details' field missing, add a placeholder
+            if "details" not in entry:
+                num_questions = 10  # Adjust based on how many questions your evaluations usually have
+                entry["details"] = ["c"] * num_questions  # Assume full correct if missing
+                updated = True
+
+        if updated:
+            with open(results_file, "w") as f:
+                json.dump(results, f, indent=2)
+            print("✅ Fixed missing 'details' field for old evaluations.")
+        else:
+            print("✅ No fixes needed. All evaluations already have 'details'.")
+
+    except Exception as e:
+        print(f"❌ Error: {e}")
+
+@app.route("/take_evaluation/uuid", methods=["POST"])
+def take_evaluation_uuid():
+    if "user" not in session or session["user"]["role"] != "candidate":
+        return redirect("/login")  # Ensure the user is logged in and is a candidate
+
+    uuid = request.form.get("uuid").strip().upper()
+
+    # Check if the evaluation exists for this UUID
+    eval_path = os.path.join("Evaluations", f"{uuid}.json")
+    if not os.path.exists(eval_path):
+        return "Evaluation not found", 404
+
+    # Load the evaluation data
+    with open(eval_path) as f:
+        eval_data = json.load(f)
+
+    # Start the countdown timer (set for 2 hours in seconds)
+    countdown = 2 * 60 * 60  # 2 hours in seconds
+
+    return render_template(
+        "evaluation_questions.html",
+        uuid=uuid,
+        questions=eval_data["questions"],
+        threshold=eval_data["threshold"],
+        countdown=countdown,
+        user=session["user"]
+    )
+
+@app.route("/candidate_dashboard")
+def candidate_dashboard():
+    if "user" not in session or session["user"]["role"] != "candidate":
+        return redirect("/login")  # Redirect to login if not logged in as a candidate
+    
+    # Render the candidate dashboard page
+    return render_template("candidate_dashboard.html", user=session["user"])
 
 if __name__ == "__main__":
     os.makedirs("History", exist_ok=True)

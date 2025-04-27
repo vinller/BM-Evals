@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Take Evaluation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col justify-center items-center">
+
+<!-- Top Bar -->
+<div class="flex justify-between items-center px-6 py-4 topbar">
+  <div class="flex items-center gap-4">
+    <img src="/static/icons/asu-logo2.png" alt="ASU Logo" class="h-10" />
+    <h1 class="text-2xl font-bold asu-gold">MU/STPV Evaluation Generator</h1>
+  </div>
+
+  <a href="/logout" class="asu-maroon asu-maroon-hover rounded-md p-2 flex items-center justify-center w-10 h-10">
+    <img src="/static/icons/house-icon.svg" alt="Logout" class="w-6 h-6 invert" />
+  </a>
+</div>
+
+<!-- Content -->
+<div class="p-6 max-w-2xl mx-auto space-y-8 mt-10">
+  <h2 class="text-3xl font-bold text-center asu-gold">Enter Your Evaluation UUID</h2>
+
+  <form method="POST" action="/take_evaluation/uuid" class="space-y-6">
+    <div>
+      <label for="uuid" class="block font-semibold text-lg asu-gold">Evaluation UUID</label>
+      <input type="text" name="uuid" id="uuid" placeholder="Enter the UUID provided by your evaluator" class="text-black p-3 rounded w-full" required>
+    </div>
+
+    <div class="flex justify-center">
+      <button type="submit" class="asu-maroon asu-maroon-hover px-6 py-3 rounded text-white font-bold mt-4">
+        Start Evaluation
+      </button>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>

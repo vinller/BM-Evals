@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Score Lookup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="icon" href="/static/icons/asu-logo2.png" type="image/png" />
+</head>
+<body class="font-sans min-h-screen">
+
+ <!-- Top Bar -->
+ <div class="flex justify-between items-center px-6 py-4 topbar">
+    <div class="flex items-center gap-4">
+      <img src="/static/icons/asu-logo2.png" alt="ASU Logo" class="h-10" />
+      <h1 class="text-2xl font-bold asu-gold">MU/STPV Evaluation Generator</h1>
+    </div>
+  
+    <div class="flex items-center gap-4">
+      <!-- Home Button -->
+      <a href="/dashboard" class="asu-maroon asu-maroon-hover rounded-md p-2 flex items-center justify-center w-10 h-10">
+        <img src="/static/icons/house-icon.svg" alt="Home" class="w-6 h-6 invert" />
+      </a>
+  
+      <!-- Logged In + Logout Together -->
+      <div class="flex items-center bg-black border border-gray-700 px-4 py-2 rounded-md gap-3">
+        <p class="text-sm font-medium">
+          Logged in as: <span class="font-semibold">{{ user.first_name }} {{ user.last_name }}</span>
+        </p>
+        <a href="/logout" title="Logout" class="logout-button hover:bg-red-700 w-8 h-8 flex items-center justify-center rounded-md">
+          <img src="/static/icons/right-bracket-icon.svg" alt="Logout" class="w-5 h-5 invert" />
+        </a>
+      </div>
+    </div>
+  </div>
+
+<!-- Body -->
+<div class="flex justify-center mt-16">
+  <div class="section-card p-8 rounded-lg space-y-8 shadow-lg max-w-xl w-full">
+    <h2 class="text-2xl font-bold text-center asu-gold">Score Lookup</h2>
+
+    <form method="POST" action="/lookup_score" class="space-y-4">
+        <div>
+          <label for="uuid" class="font-semibold text-sm asu-gold">Evaluation UUID (optional)</label>
+          <input type="text" id="uuid" name="uuid" placeholder="Enter UUID..." class="text-black p-2 rounded w-full" />
+        </div>
+      
+        <div>
+          <label for="candidate" class="font-semibold text-sm asu-gold">Or Select Candidate Name</label>
+          <select id="candidate" name="candidate" class="text-black p-2 rounded w-full">
+            <option value="">-- Select Candidate --</option>
+            {% for candidate in candidates %}
+            <option value="{{ candidate }}">{{ candidate }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      
+        <div class="flex justify-center">
+          <button type="submit" class="asu-maroon asu-maroon-hover text-white font-semibold px-6 py-2 rounded">
+            Lookup
+          </button>
+        </div>
+      </form>
+      
+  </div>
+</div>
+
+</body>
+</html>

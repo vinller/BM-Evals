@@ -47,12 +47,39 @@
           <input type="text" name="uuid" id="uuid" placeholder="Enter UUID (ex: TR0BYU)" class="w-full p-2 rounded text-black" required>
         </div>
         <div class="flex justify-center">
-          <button type="submit" class="action-button asu-maroon asu-maroon-hover text-white">Start Scoring</button>
+            <button type="button" onclick="checkAndStart()" class="action-button asu-maroon asu-maroon-hover text-white w-full">
+                Start Scoring
+              </button>
         </div>
       </div>
     </form>
   </div>
 </div>
+
+<script>
+    function checkAndStart() {
+      const uuid = document.getElementById("uuid").value.trim().toUpperCase();
+      if (!uuid) {
+        alert("Please enter a UUID.");
+        return;
+      }
+    
+      fetch(`/results/check/${uuid}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.exists) {
+            alert("Error: Evaluation already scored!");
+          } else {
+            // No duplicate → Go to scoring page
+            window.location.href = `/score/${uuid}`;
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Error checking evaluation.");
+        });
+    }
+    </script>
 
 </body>
 </html>

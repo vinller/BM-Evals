@@ -1,8 +1,11 @@
 {
-  "Section 1 - blah blah": [
+  "uuid": "M9TDC8",
+  "title": "BM Evaluation April 2025",
+  "threshold": 80,
+  "questions": [
     {
       "q": "What does a Building Manager do?",
-      "a": "Oversees operations and ensures safety in the building. anyways"
+      "a": "Oversees operations and ensures safety in the building."
     },
     {
       "q": "this is a test\nto see if multiple lines work",
@@ -11,19 +14,15 @@
     {
       "q": "hello this is the new question",
       "a": "anyways"
-    }
-  ],
-  "Section 2 - blah": [
-    {
-      "q": "Where is the AED located?",
-      "a": "Next to the information desk on the first floor."
     },
     {
       "q": "hello there",
       "a": "hows it going"
-    }
-  ],
-  "Section 3 - Hows the world": [
+    },
+    {
+      "q": "Where is the AED located?",
+      "a": "Next to the information desk on the first floor."
+    },
     {
       "q": "How do you file an incident report?",
       "a": "Fill out the online form and notify your supervisor."
@@ -31,9 +30,7 @@
     {
       "q": "When do you call campus police?",
       "a": "If there\u2019s a safety threat or uncooperative guest."
-    }
-  ],
-  "Section 4 - blah": [
+    },
     {
       "q": "Where is the AED located?",
       "a": "Next to the information desk on the first floor."
@@ -41,9 +38,11 @@
     {
       "q": "hello there",
       "a": "hows it going"
-    }
-  ],
-  "Section 5 - blah": [
+    },
+    {
+      "q": "hello there",
+      "a": "hows it going"
+    },
     {
       "q": "Where is the AED located?",
       "a": "Next to the information desk on the first floor."
@@ -51,9 +50,11 @@
     {
       "q": "hello there",
       "a": "hows it going"
-    }
-  ],
-  "Section 6 - blah": [
+    },
+    {
+      "q": "Where is the AED located?",
+      "a": "Next to the information desk on the first floor."
+    },
     {
       "q": "Where is the AED located?",
       "a": "Next to the information desk on the first floor."
@@ -61,15 +62,7 @@
     {
       "q": "hello there",
       "a": "hows it going"
-    }
-  ],
-  "Section 7 - blah": [
-    {
-      "q": "Where is the AED located?",
-      "a": "Next to the information desk on the first floor."
-    }
-  ],
-  "Section 8 - blah": [
+    },
     {
       "q": "Where is the AED located?",
       "a": "Next to the information desk on the first floor."
@@ -77,19 +70,11 @@
     {
       "q": "hello there",
       "a": "hows it going"
-    }
-  ],
-  "Section 9 - blah": [
+    },
     {
       "q": "Where is the AED located?",
       "a": "Next to the information desk on the first floor."
     },
-    {
-      "q": "hello there",
-      "a": "hows it going"
-    }
-  ],
-  "Section 10 - blah": [
     {
       "q": "just for fn",
       "a": "asdljkvg"

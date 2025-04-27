@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Evaluation Questions</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    let countdown = {{ countdown }};
+    let countdownInterval;
+
+    function updateTimer() {
+      let hours = Math.floor(countdown / 3600);
+      let minutes = Math.floor((countdown % 3600) / 60);
+      let seconds = countdown % 60;
+      document.getElementById("timer").innerText = `${hours}:${minutes}:${seconds}`;
+
+      if (countdown === 0) {
+        clearInterval(countdownInterval);
+        alert("Time's up! Your evaluation will be submitted automatically.");
+        document.getElementById("submit").click();
+      }
+
+      countdown--;
+    }
+
+    window.onload = () => {
+      countdownInterval = setInterval(updateTimer, 1000);
+    };
+  </script>
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col justify-center items-center">
+
+<!-- Top Bar -->
+<div class="flex justify-between items-center px-6 py-4 topbar">
+  <div class="flex items-center gap-4">
+    <img src="/static/icons/asu-logo2.png" alt="ASU Logo" class="h-10" />
+    <h1 class="text-2xl font-bold asu-gold">MU/STPV Evaluation Generator</h1>
+  </div>
+
+  <a href="/logout" class="asu-maroon asu-maroon-hover rounded-md p-2 flex items-center justify-center w-10 h-10">
+    <img src="/static/icons/house-icon.svg" alt="Logout" class="w-6 h-6 invert" />
+  </a>
+</div>
+
+<!-- Content -->
+<div class="p-6 max-w-2xl mx-auto space-y-8 mt-10">
+  <h2 class="text-3xl font-bold text-center asu-gold">Evaluation UUID: {{ uuid }}</h2>
+  <p class="text-lg text-center">Time remaining: <span id="timer" class="text-asu-gold font-bold"></span></p>
+
+  <form method="POST" action="/results/save" class="space-y-6">
+    <input type="hidden" name="uuid" value="{{ uuid }}">
+
+    {% for idx, question in enumerate(questions) %}
+      <div class="bg-gray-800 p-4 rounded mb-4">
+        <p class="font-semibold">{{ idx + 1 }}. {{ question.q }}</p>
+        <textarea name="score_{{ idx }}" rows="4" class="w-full p-2 rounded text-black mt-2" required placeholder="Your answer..."></textarea>
+      </div>
+    {% endfor %}
+
+    <div class="flex justify-center">
+      <button type="submit" id="submit" class="asu-maroon asu-maroon-hover px-6 py-3 rounded text-white font-bold">
+        Submit Evaluation
+      </button>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>

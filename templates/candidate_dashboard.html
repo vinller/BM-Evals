@@ -1,0 +1,36 @@
+<!-- candidate_dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Candidate Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col justify-center items-center">
+
+<!-- Top Bar -->
+<div class="flex justify-between items-center px-6 py-4 topbar">
+  <div class="flex items-center gap-4">
+    <img src="/static/icons/asu-logo2.png" alt="ASU Logo" class="h-10" />
+    <h1 class="text-2xl font-bold asu-gold">Candidate Dashboard</h1>
+  </div>
+  
+  <a href="/logout" class="asu-maroon asu-maroon-hover rounded-md p-2 flex items-center justify-center w-10 h-10">
+    <img src="/static/icons/house-icon.svg" alt="Logout" class="w-6 h-6 invert" />
+  </a>
+</div>
+
+<!-- Content -->
+<div class="p-6 max-w-2xl mx-auto space-y-8 mt-10">
+  <h2 class="text-3xl font-bold text-center asu-gold">Welcome to Your Dashboard, {{ session['user']['first_name'] }}</h2>
+  <p class="text-lg">Here, you can view your evaluations, check your results, and more!</p>
+  
+  <!-- Candidate specific content goes here -->
+  <a href="/take_evaluation" class="asu-maroon asu-maroon-hover px-4 py-2 rounded text-white w-full text-center">Take New Evaluation</a>
+  <a href="/results" class="asu-maroon asu-maroon-hover px-4 py-2 rounded text-white w-full text-center">View Results</a>
+</div>
+
+</body>
+</html>

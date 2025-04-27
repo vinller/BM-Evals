@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Candidate Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body class="font-sans min-h-screen">
+
+<!-- Top Bar -->
+<div class="flex justify-between items-center px-6 py-4 topbar">
+    <div class="flex items-center gap-4">
+      <img src="/static/icons/asu-logo2.png" alt="ASU Logo" class="h-10" />
+      <h1 class="text-2xl font-bold asu-gold">MU/STPV Evaluation Generator</h1>
+    </div>
+  
+    <div class="flex items-center gap-4">
+      <!-- Home Button -->
+      <a href="/dashboard" class="asu-maroon asu-maroon-hover rounded-md p-2 flex items-center justify-center w-10 h-10">
+        <img src="/static/icons/house-icon.svg" alt="Home" class="w-6 h-6 invert" />
+      </a>
+  
+      <!-- Logged In + Logout Together -->
+      <div class="flex items-center bg-black border border-gray-700 px-4 py-2 rounded-md gap-3">
+        <p class="text-sm font-medium">
+          Logged in as: <span class="font-semibold">{{ user.first_name }} {{ user.last_name }}</span>
+        </p>
+        <a href="/logout" title="Logout" class="logout-button hover:bg-red-700 w-8 h-8 flex items-center justify-center rounded-md">
+          <img src="/static/icons/right-bracket-icon.svg" alt="Logout" class="w-5 h-5 invert" />
+        </a>
+      </div>
+    </div>
+  </div>
+
+<!-- Profile Content -->
+<div class="p-8 max-w-5xl mx-auto">
+  <div class="section-card p-8 rounded-lg shadow-lg space-y-10">
+
+    <!-- Info Section -->
+    <div class="flex justify-between items-start">
+      <div class="space-y-2 text-sm sm:text-base">
+        <p><span class="asu-gold font-bold">Candidate Name:</span> {{ record.candidate_name }}</p>
+        <p><span class="asu-gold font-bold">Evaluation UUID:</span> {{ record.uuid }}</p>
+        <p><span class="asu-gold font-bold">Evaluator:</span> {{ record.evaluator }}</p>
+        <p><span class="asu-gold font-bold">Date Taken:</span> {{ record.date }}</p>
+        <p><span class="asu-gold font-bold">Score:</span> 
+          <span class="{% if record.score >= record.threshold %}text-green-400{% else %}text-red-400{% endif %}">{{ record.score }}%</span>
+        </p>
+        <p><span class="asu-gold font-bold">Status:</span> 
+          <span class="{% if record.status.startswith('PASS') %}text-green-400{% else %}text-red-400{% endif %}">{{ record.status }}</span>
+        </p>
+      </div>
+
+      <div>
+        {% if docx_filename != "None found" %}
+          <a href="/History/{{ docx_filename }}" class="asu-maroon asu-maroon-hover px-6 py-3 rounded text-white font-bold">
+            Download Evaluation
+          </a>
+        {% else %}
+          <p class="text-red-400">Evaluator copy not found.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Questions Section -->
+    <div class="mt-10 space-y-4">
+        <h2 class="text-xl font-bold asu-gold mb-4">Questions and Answers</h2>
+        {% for idx, q in enumerate(questions) %}
+          {% set style = "bg-gray-800" %}
+          {% if record.details is defined %}
+            {% if record.details[idx] == "c" %}
+              {% set style = "bg-green-700" %}
+            {% elif record.details[idx] == "p" %}
+              {% set style = "bg-yellow-500" %}
+            {% elif record.details[idx] == "w" %}
+              {% set style = "bg-red-700" %}
+            {% endif %}
+          {% endif %}
+          <div class="{{ style }} p-4 rounded">
+            <p class="font-semibold"><strong>Question:</strong> {{ q.q }}</p>
+            <p class="text-gray-200"><strong>Answer:</strong> {{ q.a }}</p>
+          </div>
+        {% endfor %}
+      </div>
+      
+
+    <!-- Past Evaluations Section -->
+    <div>
+        <div class="mt-10">
+            <h2 class="text-xl font-bold asu-gold mb-4">Past Evaluations:</h2>
+          
+            <div class="overflow-x-auto mt-6">
+                <table class="min-w-full border border-gray-700 rounded-lg overflow-hidden text-sm">
+                  <thead class="bg-black text-asu-gold uppercase tracking-wide text-xs">
+                    <tr>
+                      <th class="py-3 px-4 ">Date</th>
+                      <th class="py-3 px-4 ">UUID</th>
+                      <th class="py-3 px-4">Status</th>
+                      <th class="py-3 px-4 ">Score</th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-black text-white">
+                    {% for eval in past_evals %}
+                    <tr class="border-t border-gray-700 hover:bg-gray-800 transition">
+                      <td class="py-3 px-4 text-center">{{ eval.date }}</td>
+                      <td class="py-2 px-4 text-center">
+                        <a href="/candidate/{{ eval.uuid }}" class="text-[#FFC627] hover:underline">{{ eval.uuid }}</a>
+                      </td>
+                      <td class="py-2 px-4 text-center {% if eval.status.startswith('PASS') %}text-green-400{% else %}text-red-400{% endif %}">
+                        {{ eval.status }}
+                      </td>
+                      <td class="py-2 px-4 text-center">{{ eval.score }}%</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              
+          
+
+  </div>
+</div>
+
+</body>
+</html>
