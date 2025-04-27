@@ -398,7 +398,7 @@ def save_result():
     status = "PASS" if percent >= threshold else "FAIL"  # Determine if it's a pass or fail
 
     # File to store results
-    results_file = "online_evals.json"
+    results_file = "results.json"
     
     # Create the file if it doesn't exist
     if not os.path.exists(results_file):
@@ -413,7 +413,7 @@ def save_result():
     data.append({
         "uuid": uuid,
         "candidate_name": candidate_name,
-        "date_taken": date_taken,
+        "date": date_taken,
         "evaluator": evaluator,
         "score": round(percent),  # Rounded score
         "threshold": threshold,
@@ -426,7 +426,7 @@ def save_result():
     with open(results_file, "w") as f:
         json.dump(data, f, indent=2)
 
-    # Render result popup with pass/fail status
+    # Pass the status to template for the screen effect
     return render_template("popup_result.html", status=status)
 
 @app.route("/results/check/<uuid>")
@@ -477,7 +477,7 @@ def candidate_profile(uuid):
         # Find the specific evaluation record
         record = next((r for r in results if r["uuid"].upper() == uuid.upper()), None)
         if not record:
-            return "Candidate not found.", 404
+            return "Evaluation not yet graded.", 404
 
         # Find matching evaluator DOCX
         matching_docx = None
@@ -613,6 +613,17 @@ def candidate_dashboard():
     
     # Render the candidate dashboard page
     return render_template("candidate_dashboard.html", user=session["user"])
+from flask import Flask
+from datetime import datetime
+
+# Create the custom date format filter
+def datetimeformat(value, format='%B %d, %Y'):
+    if value:
+        return datetime.strptime(value, '%Y-%m-%d').strftime(format)
+    return value
+
+app.jinja_env.filters['datetimeformat'] = datetimeformat
+
 
 if __name__ == "__main__":
     os.makedirs("History", exist_ok=True)

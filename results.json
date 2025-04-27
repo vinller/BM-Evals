@@ -30,7 +30,7 @@
   {
     "uuid": "VKJRQX",
     "candidate_name": "Matthew Heinsen",
-    "date": null,
+    "date": "2025-04-25",
     "evaluator": "Vinny Panchal",
     "score": 50,
     "threshold": 80,
@@ -40,5 +40,52 @@
       "c",
       "w"
     ]
+  },
+  {
+    "uuid": "W6OUZ4",
+    "candidate_name": "Matthew Heinsen",
+    "date": "2025-04-27",
+    "evaluator": "Yakima Melton",
+    "score": 50,
+    "threshold": 80,
+    "status": "FAIL",
+    "details": [
+      "w",
+      "c",
+      "p"
+    ],
+    "timestamp": "2025-04-27 02:41:40"
+  },
+  {
+    "uuid": "SLZ9UG",
+    "candidate_name": "Matthew Heinsen",
+    "date": "2025-04-27",
+    "evaluator": "Yakima Melton",
+    "score": 17,
+    "threshold": 80,
+    "status": "FAIL",
+    "details": [
+      "w",
+      "w",
+      "p"
+    ],
+    "timestamp": "2025-04-27 02:43:03"
+  },
+  {
+    "uuid": "8KL7OD",
+    "candidate_name": "Matthew Heinsen",
+    "date": "2025-04-27",
+    "evaluator": "Yakima Melton",
+    "score": 100,
+    "threshold": 80,
+    "status": "PASS",
+    "details": [
+      "c",
+      "c",
+      "c",
+      "c",
+      "c"
+    ],
+    "timestamp": "2025-04-27 02:55:33"
   }
 ]

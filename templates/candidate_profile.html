@@ -45,7 +45,13 @@
         <p><span class="asu-gold font-bold">Candidate Name:</span> {{ record.candidate_name }}</p>
         <p><span class="asu-gold font-bold">Evaluation UUID:</span> {{ record.uuid }}</p>
         <p><span class="asu-gold font-bold">Evaluator:</span> {{ record.evaluator }}</p>
-        <p><span class="asu-gold font-bold">Date Taken:</span> {{ record.date }}</p>
+        <p><span class="asu-gold font-bold">Date Taken:</span> 
+            {% if record.date %}
+              {{ record.date | datetimeformat('%B %d, %Y') }}
+            {% else %}
+              N/A
+            {% endif %}
+          </p>          
         <p><span class="asu-gold font-bold">Score:</span> 
           <span class="{% if record.score >= record.threshold %}text-green-400{% else %}text-red-400{% endif %}">{{ record.score }}%</span>
         </p>
