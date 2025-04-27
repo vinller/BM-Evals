@@ -67,6 +67,20 @@ def dashboard():
         return redirect("/login")
     return render_template("dashboard.html", user=session["user"])
 
+@app.route("/home")
+def home():
+    if "user" not in session:
+        return redirect("/login")
+
+    # Check user role and redirect accordingly
+    if session["user"]["role"] == "admin":
+        return redirect("/dashboard")  # Admin dashboard
+    elif session["user"]["role"] == "candidate":
+        return redirect("/candidate_dashboard")  # Candidate dashboard
+    else:
+        return redirect("/login")  # In case the role is unknown or missing
+
+
 @app.route("/generate", methods=["GET", "POST"])
 def generate():
     if "user" not in session:
