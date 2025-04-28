@@ -1,98 +1,230 @@
 {
-  "Section 1 - blah blah": [
+  "Section 1 - Department and Building Fundamentals": [
     {
-      "q": "What does a Building Manager do?",
-      "a": "Oversees operations and ensures safety in the building. anyways"
+      "q": "What is the formal name of the department that you work for?",
+      "a": "Memorial Union and Student Pavilion Operations."
     },
     {
-      "q": "this is a test\nto see if multiple lines work",
-      "a": "anyways"
+      "q": "There are four different student teams that work in the Memorial Union and Student Pavilion. One of these student areas are the Building Managers. Name the other three student teams.",
+      "a": "Event Assistants (EAs), Information Desk Staff, and Operations Aides."
     },
     {
-      "q": "hello this is the new question",
-      "a": "anyways"
+      "q": "What is the required dress code for each student team?",
+      "a": "Each team follows the department\u2019s professional dress standards, including designated uniforms or attire suitable for events and guest-facing operations."
     }
   ],
-  "Section 2 - blah": [
+  "Section 2 - Building and Shift Procedures": [
     {
-      "q": "Where is the AED located?",
-      "a": "Next to the information desk on the first floor."
+      "q": "As a Building Manager, describe what should be done at the beginning of each shift?",
+      "a": "Check the shift report, complete a walkthrough, check spaces, communicate with staff, and prepare the building for operations."
     },
     {
-      "q": "hello there",
-      "a": "hows it going"
-    }
-  ],
-  "Section 3 - Hows the world": [
-    {
-      "q": "How do you file an incident report?",
-      "a": "Fill out the online form and notify your supervisor."
+      "q": "Describe the full opening procedures for the Memorial Union (MU).",
+      "a": "Unlock entrances, perform initial building checks, verify that event spaces are ready, ensure common areas are clean, and confirm operational readiness."
     },
     {
-      "q": "When do you call campus police?",
-      "a": "If there\u2019s a safety threat or uncooperative guest."
-    }
-  ],
-  "Section 4 - blah": [
-    {
-      "q": "Where is the AED located?",
-      "a": "Next to the information desk on the first floor."
+      "q": "Describe the full closing procedures for the Memorial Union (MU).",
+      "a": "Secure entrances, complete final building tours, check meeting spaces, common areas, and restrooms, ensure equipment is stored, and confirm all guests have left."
     },
     {
-      "q": "hello there",
-      "a": "hows it going"
-    }
-  ],
-  "Section 5 - blah": [
-    {
-      "q": "Where is the AED located?",
-      "a": "Next to the information desk on the first floor."
+      "q": "Describe the full opening procedures for the Student Pavilion (STPV).",
+      "a": "Unlock entrances, check the Mall, ensure meeting spaces are ready, verify AV and lights are working, and confirm event setups."
     },
     {
-      "q": "hello there",
-      "a": "hows it going"
-    }
-  ],
-  "Section 6 - blah": [
-    {
-      "q": "Where is the AED located?",
-      "a": "Next to the information desk on the first floor."
+      "q": "Describe the full closing procedures for the Student Pavilion (STPV).",
+      "a": "Secure entrances, perform final checks of meeting spaces, remove event signage, and ensure cleanliness of all common and reserved spaces."
     },
     {
-      "q": "hello there",
-      "a": "hows it going"
+      "q": "Name at least five things a Building Manager does or should be looking for during a building tour.",
+      "a": "Cleanliness, safety hazards, equipment functionality, setup accuracy, and guest issues or needs."
     }
   ],
-  "Section 7 - blah": [
+  "Section 3 - Emergency Management and Incident Response": [
     {
-      "q": "Where is the AED located?",
-      "a": "Next to the information desk on the first floor."
-    }
-  ],
-  "Section 8 - blah": [
-    {
-      "q": "Where is the AED located?",
-      "a": "Next to the information desk on the first floor."
+      "q": "Please describe what steps you would take as a Building Manager upon hearing an alarm go off in the building.",
+      "a": "Evacuate the building if necessary, guide guests outside, communicate with professional staff, and await official clearance before re-entry."
     },
     {
-      "q": "hello there",
-      "a": "hows it going"
-    }
-  ],
-  "Section 9 - blah": [
-    {
-      "q": "Where is the AED located?",
-      "a": "Next to the information desk on the first floor."
+      "q": "If the building is evacuated, how do you know when to let the general public back inside the building?",
+      "a": "Only re-enter the building after receiving an 'all clear' from professional staff or emergency personnel."
     },
     {
-      "q": "hello there",
-      "a": "hows it going"
+      "q": "Which of the following should you not do if you are inside the building and active shooting is taking place?\na. If safe, exit the building and call 9-11\nb. If you cannot leave, secure your area\nc. Yell for help\nd. Silence your cell phones",
+      "a": "c. Yell for help"
+    },
+    {
+      "q": "In each of the following emergency incidents, highlight what actions you should take: document in shift report, complete incident report, submit maintenance work order, EMS notes, or contact professional staff/ASU PD.",
+      "a": "Depends on the situation: submit work orders for maintenance issues, complete incident reports for accidents or disruptions, contact EMS for medical emergencies, contact professional staff/ASU PD for serious incidents."
     }
   ],
-  "Section 10 - blah": [
+  "Section 4 - Student Pavilion and Memorial Union": [
     {
-      "q": "just for fn",
-      "a": "asdljkvg"
+      "q": "True or False: The Building Manager is responsible for making sure the outdoor patio furniture is set neatly.",
+      "a": "True"
+    },
+    {
+      "q": "Name all of the offices (both service offices and dining options) that are located in the Memorial Union and Student Pavilion.",
+      "a": "Examples include Pitchforks, Qdoba, Chick-fil-A, Jamba Juice, P.O.D. Market, Starbucks, and the MU Administrative Offices."
+    },
+    {
+      "q": "Storage areas in each building should:\na. Be closed and locked at all times\nb. Be kept clean, organized, and free of safety concerns\nc. Be checked during building tours\nd. All of the above",
+      "a": "d. All of the above"
+    }
+  ],
+  "Section 5 - Quality Assurance": [
+    {
+      "q": "Which of the following tasks is not completed prior to the arrival of a client for a reservation?\na. The room is set up per the Setup Notes and/or diagram\nb. The room is clean, clear of trash or other miscellaneous items\nc. The tables and chairs are clean and neatly set\nd. The blinds of the room are of the same length.\ne. Equipment is tested and is in working order\nf. All of the above.",
+      "a": "d. The blinds of the room are of the same length."
+    },
+    {
+      "q": "What do you do after an event or meeting ends in the meeting rooms at STPV?",
+      "a": "Clear the room of trash, reset furniture if needed, and report any damages or issues."
+    },
+    {
+      "q": "True or False: The purpose of a facility tour is for the Building Manager to monitor, observe, and take appropriate action to ensure the building services and facilities meet the needs of the University community.",
+      "a": "True"
+    },
+    {
+      "q": "Where should trash be placed at the end of an event?",
+      "a": "In designated trash bins or behind service doors if collected separately."
+    }
+  ],
+  "Section 6 - Administration: Shift Reports": [
+    {
+      "q": "What is a Building Manager Shift Report and what is its purpose?",
+      "a": "It documents building status, incidents, and maintenance needs to maintain continuity between shifts."
+    },
+    {
+      "q": "Where do you find the Building Manager Shift Report?",
+      "a": "Accessible online via the designated operations portal or drive."
+    },
+    {
+      "q": "If you're opening, how do you create a new Shift Report for that day?",
+      "a": "Create a new entry in the system for the current date."
+    },
+    {
+      "q": "What information should go in a Shift Report?",
+      "a": "Building status, maintenance needs, incidents, shift notes, and important communications."
+    },
+    {
+      "q": "True or False: The shift report should be checked at the beginning of your shift to review any notes left by the previous Building Manager.",
+      "a": "True"
+    }
+  ],
+  "Section 7 - Administration: Incident and Maintenance Reporting": [
+    {
+      "q": "Maintenance work orders can be?\na. Submitted only via the online form\nb. Submitted via telephone with professional staff\nc. Submitted via telephone in the event of an emergency\nd. B and C",
+      "a": "d. B and C"
+    },
+    {
+      "q": "Describe how you would submit a work order to have a maintenance issue addressed in the building (e.g., a spill, cleaning in a public area)?",
+      "a": "Submit through the online form or call professional staff if urgent."
+    },
+    {
+      "q": "Where can you find an Incident Report to complete?",
+      "a": "On the Building Manager portal or in the operations office."
+    },
+    {
+      "q": "Which of the following should not be included in an Incident Report?\na. The time and date of the incident\nb. Names and roles of individuals involved\nc. The end result of the incident\nd. An informed opinion of what those involved should have done differently\ne. All of the above.",
+      "a": "d. An informed opinion of what those involved should have done differently"
+    }
+  ],
+  "Section 8 - Scheduling and Hourly Reporting": [
+    {
+      "q": "True or False: If running behind schedule for a scheduled work shift, Building Managers should contact the Building Manager Supervisor so they can properly clock you into your shift.",
+      "a": "True"
+    },
+    {
+      "q": "If you need to drop a shift, what steps should you take?",
+      "a": "Submit the shift drop request on SubItUp and inform the supervisor."
+    },
+    {
+      "q": "What is an RTO?",
+      "a": "Request Time Off."
+    },
+    {
+      "q": "When and how do you submit an RTO?",
+      "a": "Submit through SubItUp at least two weeks in advance."
+    }
+  ],
+  "Section 9 - Technology and Audio Visual": [
+    {
+      "q": "What is the code for MU Building Manager (BM) iPad?",
+      "a": "1111"
+    },
+    {
+      "q": "What is the code for MU Event Assistant (EA) iPad?",
+      "a": "0000"
+    },
+    {
+      "q": "What is the code for STPV Building Manager (BM) iPad?",
+      "a": "3333"
+    },
+    {
+      "q": "What is the code for the Union Stage Panel?",
+      "a": "3142"
+    },
+    {
+      "q": "What is the code for the Video Wall Panel?",
+      "a": "0603"
+    },
+    {
+      "q": "What is the code for Senita Lighting Panels?",
+      "a": "3142"
+    },
+    {
+      "q": "What is the code for the STPV Lockbox?",
+      "a": "6532"
+    },
+    {
+      "q": "What is the code for MU Podiums?",
+      "a": "4242"
+    },
+    {
+      "q": "What is the code for MU AMX Sub Panels?",
+      "a": "3142"
+    },
+    {
+      "q": "Where are items such as adaptors, HDMI cords and VGA cords stored?",
+      "a": "In the operations storage rooms or designated tech closets."
+    }
+  ],
+  "Section 10 - Event Management and Policy": [
+    {
+      "q": "A client arrives and states that they have a room reserved but you do not see it on the Setup Worksheet. How do you respond?",
+      "a": "Check the Event Master List or contact the Event Coordinator for clarification."
+    },
+    {
+      "q": "A client would like to change details to their event that is taking place in the next three months. Where do you direct them?",
+      "a": "To their Event Coordinator."
+    },
+    {
+      "q": "True or False: Clients may post flyers, signs or decorations on the walls for decoration with scotch tape.",
+      "a": "False"
+    },
+    {
+      "q": "True or False: Check-in tables can be left outside of the meeting room or ballroom until the next scheduled event needs them.",
+      "a": "True"
+    },
+    {
+      "q": "If a client arrives at the Student Pavilion for a table reservation in the Mall, how do you assist the client?",
+      "a": "Check their reservation details and assist with setup if needed."
+    },
+    {
+      "q": "Name the correct setup for each setup image (matching question).",
+      "a": "Answers will vary depending on images shown."
+    },
+    {
+      "q": "Which of the following is true about event changes?\na. Last minute changes can be only requested by the Event Coordinator\nb. Last minute changes can be requested by the primary and secondary contact for the event as listed in the Setup Worksheet\nc. Changes to an event may be requested at any point during the event as long as they are feasible\nd. B and C",
+      "a": "d. B and C"
+    },
+    {
+      "q": "True or False: If the event change request is not possible, the Building Manager must inform the guest that we will not be able to provide the requested change but we will do our best to provide them with alternatives.",
+      "a": "True"
+    },
+    {
+      "q": "True or False: A Building Manager should always refresh the iPad to ensure that the latest information is reflected in the Setup Worksheet.",
+      "a": "True"
     }
   ]
 }

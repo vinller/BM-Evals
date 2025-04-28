@@ -1,0 +1,49 @@
+<!-- topbar.html -->
+<div class="flex items-center justify-between px-6 py-4 bg-black relative">
+    <!-- Left: Logo + Title -->
+    <div class="flex items-center gap-4 flex-shrink-0">
+      <img src="/static/icons/asu-logo2.png" alt="ASU Logo" class="h-10" />
+      <h1 class="text-2xl font-bold asu-gold whitespace-nowrap">MU/STPV Evaluation Generator</h1>
+    </div>
+  
+    <!-- Right Side Buttons (Desktop Only) -->
+    <div class="hidden md:flex items-center gap-4">
+      <a href="/home" class="asu-maroon asu-maroon-hover rounded-md p-2 flex items-center justify-center w-10 h-10">
+        <img src="/static/icons/house-icon.svg" alt="Home" class="w-6 h-6 invert" />
+      </a>
+  
+      <div class="flex items-center bg-black border border-gray-700 px-4 py-2 rounded-md gap-2">
+        <p class="text-sm font-medium">
+          Logged in as: <span class="font-semibold">{{ user.first_name }} {{ user.last_name }}</span>
+        </p>
+        <a href="/logout" title="Logout" class="logout-button hover:bg-red-700 w-8 h-8 flex items-center justify-center rounded-md">
+          <img src="/static/icons/right-bracket-icon.svg" alt="Logout" class="w-5 h-5 invert" />
+        </a>
+      </div>
+    </div>
+  
+    <!-- Hamburger (Mobile Only) -->
+    <div class="md:hidden flex items-center">
+      <button id="menu-toggle" class="focus:outline-none">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+  
+    <!-- Dropdown Menu (Mobile) -->
+    <div id="menu" class="hidden absolute right-6 top-20 bg-black border border-gray-700 rounded-md shadow-lg py-2 w-48 z-50">
+      <a href="/home" class="block px-4 py-2 hover:bg-gray-800">🏠 Home</a>
+      <a href="/logout" class="block px-4 py-2 hover:bg-red-700">🚪 Logout</a>
+    </div>
+  </div>
+  
+  <script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const menu = document.getElementById('menu');
+  
+    menuToggle.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+  </script>
+  

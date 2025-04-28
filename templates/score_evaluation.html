@@ -10,30 +10,7 @@
 </head>
 <body class="bg-black text-white min-h-screen font-sans">
 
-<!-- Top Bar -->
-<div class="flex justify-between items-center px-6 py-4 topbar">
-    <div class="flex items-center gap-4">
-      <img src="/static/icons/asu-logo2.png" alt="ASU Logo" class="h-10" />
-      <h1 class="text-2xl font-bold asu-gold">MU/STPV Evaluation Generator</h1>
-    </div>
-  
-    <div class="flex items-center gap-4">
-      <!-- Home Button -->
-      <a href="/home" class="asu-maroon asu-maroon-hover rounded-md p-2 flex items-center justify-center w-10 h-10">
-        <img src="/static/icons/house-icon.svg" alt="Home" class="w-6 h-6 invert" />
-      </a>
-  
-      <!-- Logged In + Logout Together -->
-      <div class="flex items-center bg-black border border-gray-700 px-4 py-2 rounded-md gap-3">
-        <p class="text-sm font-medium">
-          Logged in as: <span class="font-semibold">{{ user.first_name }} {{ user.last_name }}</span>
-        </p>
-        <a href="/logout" title="Logout" class="logout-button hover:bg-red-700 w-8 h-8 flex items-center justify-center rounded-md">
-          <img src="/static/icons/right-bracket-icon.svg" alt="Logout" class="w-5 h-5 invert" />
-        </a>
-      </div>
-    </div>
-  </div>
+  {% include 'partials/topbar.html' %}
 
 <div class="p-6 max-w-3xl mx-auto mt-10">
   <h2 class="text-3xl font-bold text-center asu-gold mb-8">Scoring Evaluation</h2>
@@ -56,17 +33,25 @@
     <!-- Questions Section -->
     <div class="space-y-4 mb-8">
       {% for q in questions %}
-      <div class="section-card p-4 rounded space-y-2">
-        <p class="font-semibold">Question {{ loop.index }}: {{ q.q }}</p>  <!-- Display the question -->
-        <p class="text-gray-300"><strong>Answer:</strong> {{ q.a }}</p>  <!-- Display the answer -->
-        <select name="score_{{ loop.index }}" class="w-full p-2 mt-2 rounded text-black">
-          <option value="2">2 - Full Credit</option>
-          <option value="1">1 - Partial Credit</option>
-          <option value="0">0 - Incorrect</option>
-        </select>
-      </div>
+        <div class="section-card p-4 rounded space-y-2">
+          <p class="font-semibold">Question {{ loop.index }}: {{ q.q }}</p>
+    
+          {% if student_answers %}
+            <p class="text-gray-300"><strong>Student Answer:</strong> {{ student_answers['answer_' ~ loop.index0] }}</p>
+            <p class="text-gray-300"><strong>Ideal Answer:</strong> {{ q.a }}</p>
+          {% else %}
+            <p class="text-gray-300"><strong>Answer:</strong> {{ q.a }}</p>
+          {% endif %}
+    
+          <select name="score_{{ loop.index0 }}" class="w-full p-2 mt-2 rounded text-black">
+            <option value="2">2 - Full Credit</option>
+            <option value="1">1 - Partial Credit</option>
+            <option value="0">0 - Incorrect</option>
+          </select>
+        </div>
       {% endfor %}
     </div>
+    
 
     <div class="flex justify-center">
       <button type="submit" class="action-button asu-maroon asu-maroon-hover text-white">Submit Results</button>

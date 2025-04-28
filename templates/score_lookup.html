@@ -10,30 +10,7 @@
 </head>
 <body class="font-sans min-h-screen">
 
- <!-- Top Bar -->
- <div class="flex justify-between items-center px-6 py-4 topbar">
-    <div class="flex items-center gap-4">
-      <img src="/static/icons/asu-logo2.png" alt="ASU Logo" class="h-10" />
-      <h1 class="text-2xl font-bold asu-gold">MU/STPV Evaluation Generator</h1>
-    </div>
-  
-    <div class="flex items-center gap-4">
-      <!-- Home Button -->
-      <a href="/home" class="asu-maroon asu-maroon-hover rounded-md p-2 flex items-center justify-center w-10 h-10">
-        <img src="/static/icons/house-icon.svg" alt="Home" class="w-6 h-6 invert" />
-      </a>
-  
-      <!-- Logged In + Logout Together -->
-      <div class="flex items-center bg-black border border-gray-700 px-4 py-2 rounded-md gap-3">
-        <p class="text-sm font-medium">
-          Logged in as: <span class="font-semibold">{{ user.first_name }} {{ user.last_name }}</span>
-        </p>
-        <a href="/logout" title="Logout" class="logout-button hover:bg-red-700 w-8 h-8 flex items-center justify-center rounded-md">
-          <img src="/static/icons/right-bracket-icon.svg" alt="Logout" class="w-5 h-5 invert" />
-        </a>
-      </div>
-    </div>
-  </div>
+  {% include 'partials/topbar.html' %}
 
 <!-- Body -->
 <div class="flex justify-center mt-16">

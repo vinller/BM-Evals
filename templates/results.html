@@ -11,40 +11,17 @@
 </head>
 <body class="min-h-screen font-sans">
 
-<!-- Top Bar -->
-<div class="flex justify-between items-center px-6 py-4 topbar">
-    <div class="flex items-center gap-4">
-      <img src="/static/icons/asu-logo2.png" alt="ASU Logo" class="h-10" />
-      <h1 class="text-2xl font-bold asu-gold">MU/STPV Evaluation Generator</h1>
-    </div>
-  
-    <div class="flex items-center gap-4">
-      <!-- Home Button -->
-      <a href="/home" class="asu-maroon asu-maroon-hover rounded-md p-2 flex items-center justify-center w-10 h-10">
-        <img src="/static/icons/house-icon.svg" alt="Home" class="w-6 h-6 invert" />
-      </a>
-  
-      <!-- Logged In + Logout Together -->
-      <div class="flex items-center bg-black border border-gray-700 px-4 py-2 rounded-md gap-3">
-        <p class="text-sm font-medium">
-          Logged in as: <span class="font-semibold">{{ user.first_name }} {{ user.last_name }}</span>
-        </p>
-        <a href="/logout" title="Logout" class="logout-button hover:bg-red-700 w-8 h-8 flex items-center justify-center rounded-md">
-          <img src="/static/icons/right-bracket-icon.svg" alt="Logout" class="w-5 h-5 invert" />
-        </a>
-      </div>
-    </div>
-  </div>
+  {% include 'partials/topbar.html' %}
 
 <!-- Search UUID -->
 <div class="flex justify-center mt-20">
   <div class="section-card p-8 rounded-lg space-y-6 shadow-lg w-full max-w-lg">
-    <h2 class="text-2xl font-bold text-center asu-gold">Log Evaluation Results</h2>
+    <h2 class="text-2xl font-bold text-center asu-gold">Grade Evaluations</h2>
     <form method="POST" action="/results">
       <div class="space-y-4">
         <div>
           <label for="uuid" class="block font-semibold asu-gold mb-2">Evaluation UUID</label>
-          <input type="text" name="uuid" id="uuid" placeholder="Enter UUID (ex: TR0BYU)" class="w-full p-2 rounded text-black" required>
+          <input type="text" name="uuid" id="uuid" placeholder="Enter UUID (ex: TR0BYU) to start scoring" class="w-full p-2 rounded text-black" required>
         </div>
         <div class="flex justify-center">
             <button type="button" onclick="checkAndStart()" class="action-button asu-maroon asu-maroon-hover text-white w-full">
@@ -80,6 +57,8 @@
         });
     }
     </script>
+
+
 
 </body>
 </html>

@@ -87,5 +87,20 @@
       "c"
     ],
     "timestamp": "2025-04-27 02:55:33"
+  },
+  {
+    "uuid": "JLRVBW",
+    "candidate_name": "Matthew Heinsen",
+    "date": "2025-04-28",
+    "evaluator": "Vinny Panchal",
+    "score": 100,
+    "threshold": 80,
+    "status": "PASS",
+    "details": [
+      "c",
+      "c",
+      "c"
+    ],
+    "timestamp": "2025-04-27 17:04:18"
   }
 ]

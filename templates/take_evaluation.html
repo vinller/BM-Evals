@@ -6,30 +6,58 @@
   <title>Take Evaluation</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease-out;
+    }
+  </style>
 </head>
-<body class="bg-black text-white min-h-screen flex flex-col justify-center items-center">
+<body class="asu-dark text-white font-sans">
 
 <!-- Top Bar -->
 <div class="flex justify-between items-center px-6 py-4 topbar">
   <div class="flex items-center gap-4">
     <img src="/static/icons/asu-logo2.png" alt="ASU Logo" class="h-10" />
-    <h1 class="text-2xl font-bold asu-gold">MU/STPV Evaluation Generator</h1>
+    <h1 class="text-2xl font-bold asu-gold">MU/STPV Evaluation</h1>
   </div>
+  
+  <div class="flex items-center gap-4">
+    <!-- Home Button -->
+    <a href="/home" class="asu-maroon asu-maroon-hover rounded-md p-2 flex items-center justify-center w-10 h-10">
+      <img src="/static/icons/house-icon.svg" alt="Home" class="w-6 h-6 invert" />
+    </a>
 
-  <a href="/logout" class="asu-maroon asu-maroon-hover rounded-md p-2 flex items-center justify-center w-10 h-10">
-    <img src="/static/icons/house-icon.svg" alt="Logout" class="w-6 h-6 invert" />
-  </a>
+    <!-- Logged In + Logout Together -->
+    <div class="flex items-center bg-black border border-gray-700 px-4 py-2 rounded-md gap-3">
+      <p class="text-sm font-medium">
+        Logged in as: <span class="font-semibold">{{ user.first_name }} {{ user.last_name }}</span>
+      </p>
+      <a href="/logout" title="Logout" class="logout-button hover:bg-red-700 w-8 h-8 flex items-center justify-center rounded-md">
+        <img src="/static/icons/right-bracket-icon.svg" alt="Logout" class="w-5 h-5 invert" />
+      </a>
+    </div>
+  </div>
 </div>
 
 <!-- Content -->
 <div class="p-6 max-w-2xl mx-auto space-y-8 mt-10">
-  <h2 class="text-3xl font-bold text-center asu-gold">Enter Your Evaluation UUID</h2>
+  <h2 class="text-3xl font-bold text-center asu-gold mb-6">Enter Your Evaluation UUID</h2>
 
-  <form method="POST" action="/take_evaluation/uuid" class="space-y-6">
+  <form method="POST" action="/take_evaluation" class="space-y-6">
     <div>
-      <label for="uuid" class="block font-semibold text-lg asu-gold">Evaluation UUID</label>
+      <label for="uuid" class="block font-semibold text-lg asu-gold mb-2">Evaluation UUID</label>
       <input type="text" name="uuid" id="uuid" placeholder="Enter the UUID provided by your evaluator" class="text-black p-3 rounded w-full" required>
     </div>
+
+    {% if error %}
+    <div class="bg-red-700 text-white font-semibold rounded-md p-4 text-center animate-fade-in">
+      {{ error }}
+    </div>
+  {% endif %}
 
     <div class="flex justify-center">
       <button type="submit" class="asu-maroon asu-maroon-hover px-6 py-3 rounded text-white font-bold mt-4">

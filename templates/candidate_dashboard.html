@@ -10,17 +10,7 @@
 </head>
 <body class="font-sans bg-black text-white">
 
-<!-- Top Bar -->
-<div class="flex justify-between items-center px-6 py-4 topbar">
-  <div class="flex items-center gap-4">
-    <img src="/static/icons/asu-logo2.png" alt="ASU Logo" class="h-10" />
-    <h1 class="text-2xl font-bold asu-gold">Candidate Dashboard</h1>
-  </div>
-  
-  <a href="/logout" class="asu-maroon asu-maroon-hover rounded-md p-2 flex items-center justify-center w-10 h-10">
-    <img src="/static/icons/right-bracket-icon.svg" alt="Logout" class="w-6 h-6 invert" />
-  </a>
-</div>
+  {% include 'partials/topbar.html' %}
 
 <!-- Dashboard Body -->
 <div class="flex justify-center mt-10">
@@ -33,7 +23,7 @@
       <a href="/take_evaluation" class="action-button asu-maroon asu-maroon-hover text-white w-full md:w-auto">
         Take New Evaluation
       </a>
-      <a href="/results" class="action-button asu-maroon asu-maroon-hover text-white w-full md:w-auto">
+      <a href="/view_results" class="action-button asu-maroon asu-maroon-hover text-white w-full md:w-auto">
         View Results
       </a>
     </div>

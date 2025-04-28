@@ -1,4 +1,6 @@
-#!/opt/render/project/src/.venv/bin/python
+#!/bin/sh
+'''exec' "/Users/vinny/Documents/Coding/Evaluation Generator v2/.venv/bin/python3.12" "$0" "$@"
+' '''
 # -*- coding: utf-8 -*-
 import re
 import sys

@@ -1,0 +1,31 @@
+runtime: python39  # Specifies the Python version you are using
+
+entrypoint: gunicorn -b :$PORT app:app  # Change this to your main entry point (app.py or whatever your entry file is)
+
+instance_class: F2  # Defines the instance class; you can choose based on your project needs (F2 is a standard choice)
+
+env_variables:
+  FLASK_ENV: "production"  # Set any environment variables here, such as for Flask
+  # Example of adding other environment variables if needed
+  # SECRET_KEY: "your_secret_key" 
+
+handlers:
+  # Serving static files (CSS, JS, images, etc.)
+  - url: /static
+    static_dir: static  # Serves static files from the 'static' folder
+
+  # Route all other requests to your Flask app (entry point)
+  - url: /.*
+    script: auto  # Routes all requests to the application
+
+# Optional: Set up custom scaling settings if needed
+automatic_scaling:
+  min_instances: 1  # Minimum number of instances
+  max_instances: 5  # Maximum number of instances (adjust based on your traffic)
+
+# Simplified Health Check
+health_check:
+  # This will perform basic health checks on your app. It will ping the root endpoint to check for availability.
+  # The default health check is fine for most apps and is suitable for simple apps.
+  enable_health_check: true  # Default health check is enabled for App Engine
+

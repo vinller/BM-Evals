@@ -30,11 +30,10 @@ def get_current_questions():
 def download_file(filename):
     return send_from_directory("History", filename, as_attachment=True)
 
-@app.route("/")
-def home():
-    if "user" in session:
-        return redirect("/dashboard")
-    return redirect("/login")
+@app.route('/')
+def default():
+    return redirect('/login')
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -237,23 +236,36 @@ def generate_doc(uuid, copy_type, user, prefix, selected_sections, eval_title, i
 def download_ready(filename):
     return render_template("download_ready.html", filename=filename, user=session["user"])
 
-@app.route("/score/<uuid>")
-def start_scoring(uuid):
-    if "user" not in session:
-        return redirect("/login")
-
-    try:
-        with open(f"Evaluations/{uuid}.json") as f:
-            eval_data = json.load(f)
-    except FileNotFoundError:
+@app.route('/score/<uuid>', methods=["GET"])
+def score_evaluation(uuid):
+    # Load the evaluation file (questions)
+    eval_path = os.path.join("Evaluations", f"{uuid}.json")
+    if not os.path.exists(eval_path):
         return "Evaluation not found", 404
 
-    return render_template("score_evaluation.html",
-        uuid=uuid,
-        questions=eval_data["questions"],
-        threshold=eval_data["threshold"],
-        user=session["user"]
-    )
+    with open(eval_path) as f:
+        eval_data = json.load(f)
+
+    # Try to load student answers from online_evals.json
+    student_answers = None
+    if os.path.exists("online_evals.json"):
+        with open("online_evals.json") as f:
+            content = f.read().strip()
+            if content:  # Check not empty
+                online_evals = json.loads(content)
+                for entry in online_evals:
+                    if entry.get("uuid") == uuid:
+                        student_answers = entry.get("answers", {})
+
+    return render_template(
+    "score_evaluation.html",
+    uuid=uuid,
+    threshold=80,
+    questions=eval_data['questions'],
+    student_answers=student_answers,
+    user=session["user"]  # 👈 ADD THIS!
+)
+
 
 
 @app.route("/lookup", methods=["GET", "POST"])
@@ -479,6 +491,7 @@ def score_lookup():
                         return redirect(url_for("candidate_profile", uuid=r["uuid"]))
 
     return render_template("score_lookup.html", candidates=candidates, user=session["user"])
+
 @app.route("/candidate/<uuid>")
 def candidate_profile(uuid):
     if "user" not in session:
@@ -501,7 +514,6 @@ def candidate_profile(uuid):
                 if uuid.upper() in file and "Evaluator" in file:
                     matching_docx = file
                     break
-
         if not matching_docx:
             matching_docx = "None found"
 
@@ -513,8 +525,17 @@ def candidate_profile(uuid):
         with open(eval_file_path) as f:
             eval_data = json.load(f)
 
-        # Find all past evaluations of this candidate
-        candidate_name = record["candidate_name"]
+        # ✅ NOW load the student answers if they exist
+        student_answers = None
+        if os.path.exists("online_evals.json"):
+            with open("online_evals.json") as f:
+                content = f.read().strip()
+                if content:
+                    online_evals = json.loads(content)
+                    for entry in online_evals:
+                        if entry.get("uuid", "").upper() == uuid.upper():
+                            student_answers = entry.get("answers", {})
+
         # Load all past evaluations by the candidate
         past_evals = []
         with open("results.json") as f:
@@ -526,8 +547,12 @@ def candidate_profile(uuid):
                     "status": r["status"],
                     "score": r["score"],
                     "date": r.get("date", "N/A")
-            })
+                })
 
+        if student_answers is None:
+            student_answers = {}
+
+        # 🛠️ Pass everything to the template
         return render_template(
             "candidate_profile.html",
             record=record,
@@ -537,12 +562,13 @@ def candidate_profile(uuid):
             uuid=uuid,
             user=session["user"],
             enumerate=enumerate,
-            past_evals=past_evals
+            past_evals=past_evals,
+            student_answers=student_answers  # << 👈 ADD THIS
         )
 
     except Exception as e:
         print(f"Error loading candidate profile: {e}")
-    return "Error loading candidate profile.", 500
+        return "Error loading candidate profile.", 500
 
 @app.route("/lookup_score", methods=["POST"])
 def lookup_score():
@@ -591,34 +617,108 @@ def fix_results_file():
 
     except Exception as e:
         print(f"❌ Error: {e}")
-
-@app.route("/take_evaluation/uuid", methods=["POST"])
-def take_evaluation_uuid():
+        
+@app.route('/take_evaluation', methods=["GET", "POST"])
+def take_evaluation():
     if "user" not in session or session["user"]["role"] != "candidate":
-        return redirect("/login")  # Ensure the user is logged in and is a candidate
+        return redirect("/login")
 
-    uuid = request.form.get("uuid").strip().upper()
+    if request.method == "POST":
+        uuid = request.form.get("uuid").strip().upper()
+        eval_path = os.path.join("Evaluations", f"{uuid}.json")
 
-    # Check if the evaluation exists for this UUID
+        # UUID doesn't exist
+        if not os.path.exists(eval_path):
+            return render_template("take_evaluation.html",
+                error="This evaluation has expired or is incorrect. Please ask your evaluator for more information.",
+                user=session["user"]
+            )
+
+        # UUID already graded (in results.json)
+        if os.path.exists("results.json"):
+            with open("results.json") as f:
+                results = json.load(f)
+            for r in results:
+                if r.get("uuid") == uuid:
+                    return render_template("take_evaluation.html",
+                        error="This evaluation has already been taken/graded. Please use the correct UUID or contact your evaluator for a new one.",
+                        user=session["user"]
+                    )
+
+        # UUID already submitted (in online_evals.json)
+        if os.path.exists("online_evals.json"):
+            with open("online_evals.json") as f:
+                content = f.read().strip()
+                if content:  # <- only try parsing if file is NOT empty
+                    online_evals = json.loads(content)
+                    for r in online_evals:
+                        if r.get("uuid") == uuid:
+                            return render_template("take_evaluation.html",
+                                error="This evaluation has already been submitted but not graded yet. Please contact your evaluator for more information or check back later.",
+                                user=session["user"]
+                            )
+
+        # ✅ UUID valid → Redirect to the evaluation form
+        return redirect(url_for('evaluation_form', uuid=uuid))
+
+    return render_template("take_evaluation.html", user=session["user"])
+
+
+@app.route('/evaluation_form/<uuid>')
+def evaluation_form(uuid):
+    if "user" not in session or session["user"]["role"] != "candidate":
+        return redirect("/login")
+
     eval_path = os.path.join("Evaluations", f"{uuid}.json")
     if not os.path.exists(eval_path):
         return "Evaluation not found", 404
 
-    # Load the evaluation data
     with open(eval_path) as f:
         eval_data = json.load(f)
 
-    # Start the countdown timer (set for 2 hours in seconds)
-    countdown = 2 * 60 * 60  # 2 hours in seconds
+    countdown = 2 * 60 * 60  # 2 hours
 
-    return render_template(
-        "evaluation_questions.html",
-        uuid=uuid,
-        questions=eval_data["questions"],
-        threshold=eval_data["threshold"],
-        countdown=countdown,
-        user=session["user"]
-    )
+    return render_template("take_evaluation_form.html",
+                           eval_data=eval_data,
+                           countdown=countdown,
+                           uuid=uuid,
+                           user=session["user"])
+
+
+@app.route("/submit_evaluation/<uuid>", methods=["POST"])
+def submit_evaluation(uuid):
+    if "user" not in session or session["user"]["role"] != "candidate":
+        return redirect("/login")
+
+    answers = {f"answer_{idx}": request.form.get(f"score_{idx}") for idx in range(len(request.form) - 1)}
+
+    eval_path = os.path.join("Evaluations", f"{uuid}.json")
+    if not os.path.exists(eval_path):
+        return "Evaluation not found", 404
+
+    with open(eval_path) as f:
+        eval_data = json.load(f)
+
+    results_file = "online_evals.json"
+
+    # Safely load existing results or initialize an empty list
+    if os.path.exists(results_file) and os.path.getsize(results_file) > 0:
+        with open(results_file) as f:
+            data = json.load(f)
+    else:
+        data = []
+
+    data.append({
+        "uuid": uuid,
+        "candidate_name": session["user"]["first_name"] + " " + session["user"]["last_name"],
+        "answers": answers,
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    })
+
+    with open(results_file, "w") as f:
+        json.dump(data, f, indent=2)
+
+    return redirect("/candidate_dashboard")
 
 @app.route("/candidate_dashboard")
 def candidate_dashboard():
@@ -638,6 +738,51 @@ def datetimeformat(value, format='%B %d, %Y'):
 
 app.jinja_env.filters['datetimeformat'] = datetimeformat
 
+@app.route('/view_results')
+def view_results():
+    user = session.get('user')  # Ensure user is logged in
+    if not user:
+        return redirect(url_for('login'))
+
+    # Load all results
+    with open('results.json') as f:
+        results = json.load(f)
+
+    # Match user's full name
+    full_name = f"{user['first_name']} {user['last_name']}"
+    matching_results = [r for r in results if r.get('candidate_name') == full_name]
+
+    if matching_results:
+        # Sort evaluations by date (newest first)
+        matching_results = sorted(matching_results, key=lambda x: x.get('date', ''), reverse=True)
+
+        latest_result = matching_results[0]
+
+        # Load questions
+        with open('questions_grouped.json') as qf:
+            questions = json.load(qf)
+
+        # Prepare past evaluations
+        past_evals = [
+            {
+                'date': eval.get('date', 'N/A'),
+                'uuid': eval.get('uuid', 'N/A'),
+                'status': eval.get('status', 'N/A'),
+                'score': eval.get('score', 'N/A')
+            }
+            for eval in matching_results[1:]
+        ]
+
+        return render_template(
+            'view_results.html',
+            user=user,
+            record=latest_result,
+            past_evals=past_evals,
+            questions=questions,   # <-- ADD THIS LINE
+            no_results=False
+        )
+    else:
+        return render_template('view_results.html', no_results=True, user=user)
 
 if __name__ == "__main__":
     os.makedirs("History", exist_ok=True)

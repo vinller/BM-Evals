@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Evaluation Results</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body class="bg-black text-white min-h-screen font-sans">
+
+    {% include 'partials/topbar.html' %}
+
+{% if no_results %}
+<!-- No Results Section -->
+<div class="flex flex-col justify-center items-center text-center mt-24 px-6">
+  <h2 class="text-3xl font-bold text-red-400">No Graded Evaluations Found</h2>
+  <p class="mt-4 text-white">It looks like you don't have any graded evaluations yet. Please complete an evaluation or check back later.</p>
+</div>
+
+{% else %}
+<!-- Main Content -->
+<div class="p-8 max-w-5xl mx-auto space-y-10">
+
+  <!-- Latest Evaluation -->
+  <div class="section-card p-8 rounded-lg shadow-lg space-y-6">
+    <h2 class="text-3xl font-bold asu-gold text-center">{{ user.first_name }} {{ user.last_name }}'s Latest Evaluation</h2>
+
+    <div class="text-center space-y-2">
+      <p class="text-lg">
+        <strong>Score:</strong> 
+        <span class="{% if record.status == 'PASS' or record.status == 'PASS!!' %}text-green-400{% else %}text-red-400{% endif %} font-bold">
+          {{ record.score }}/100
+        </span>
+      </p>
+
+      <p class="text-lg">
+        <strong>Status:</strong> 
+        <span class="{% if record.status == 'PASS' or record.status == 'PASS!!' %}text-green-400{% else %}text-red-400{% endif %} font-bold">
+          {{ record.status }}
+        </span>
+      </p>
+
+      <p class="text-lg">
+        <strong>Evaluation Date:</strong> {{ record.date }}
+      </p>
+
+      <p class="text-lg">
+        <strong>Evaluation ID:</strong> {{ record.uuid }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Past Evaluations -->
+  {% if past_evals %}
+  <div class="section-card p-8 rounded-lg shadow-lg space-y-6">
+    <h3 class="text-2xl font-bold asu-gold text-center mb-4">Past Evaluations</h3>
+
+    <div class="overflow-x-auto">
+        <table class="w-full bg-black rounded-lg overflow-hidden text-center">
+          <thead class="bg-black border-b border-gray-700 text-asu-gold">
+            <tr>
+              <th class="py-2 px-4">Date</th>
+              <th class="py-2 px-4">Evaluation ID</th>
+              <th class="py-2 px-4">Score</th>
+              <th class="py-2 px-4">Status</th>
+            </tr>
+          </thead>
+          <tbody class="bg-black text-white">
+            {% for eval in past_evals %}
+            <tr class="border-t border-gray-700 hover:bg-[#b33c61] transition">
+              <td class="py-3 px-4 text-center">{{ eval.date }}</td>
+              <td class="py-2 px-4 text-center text-[#FFC627]">{{ eval.uuid }}</td>
+              <td class="py-2 px-4 text-center">{{ eval.score }}%</td>
+              <td class="py-2 px-4 text-center">
+                {% if eval.status.startswith('PASS') %}
+                  <span class="text-green-400 font-bold">{{ eval.status }}</span>
+                {% else %}
+                  <span class="text-red-400 font-bold">{{ eval.status }}</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      
+  </div>
+  {% endif %}
+
+</div>
+{% endif %}
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "uuid": "JLRVBW",
+  "title": "matthew special",
+  "threshold": 80,
+  "questions": [
+    {
+      "q": "There are four different student teams that work in the Memorial Union and Student Pavilion. One of these student areas are the Building Managers. Name the other three student teams.",
+      "a": "Event Assistants (EAs), Information Desk Staff, and Operations Aides."
+    },
+    {
+      "q": "What is the required dress code for each student team?",
+      "a": "Each team follows the department\u2019s professional dress standards, including designated uniforms or attire suitable for events and guest-facing operations."
+    },
+    {
+      "q": "What is the formal name of the department that you work for?",
+      "a": "Memorial Union and Student Pavilion Operations."
+    }
+  ]
+}

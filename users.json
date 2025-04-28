@@ -24,6 +24,20 @@
       "last_name": "Jackson",
       "email": "christopher.jackson.1@asu.edu",
       "password": "cjacks80@mu"
+    },
+    "candidate1": {
+      "first_name": "Kavya",
+      "last_name": "Chandrasekar",
+      "email": "kavya@112",
+      "password": "kavya",
+      "role": "candidate"
+    },
+    "candidate2": {
+      "first_name": "Matthew",
+      "last_name": "Heinsen",
+      "email": "mat@123",
+      "password": "mat",
+      "role": "candidate"
     }
   }
   

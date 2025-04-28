@@ -31,17 +31,7 @@
 </head>
 <body class="bg-black text-white min-h-screen flex flex-col justify-center items-center">
 
-<!-- Top Bar -->
-<div class="flex justify-between items-center px-6 py-4 topbar">
-  <div class="flex items-center gap-4">
-    <img src="/static/icons/asu-logo2.png" alt="ASU Logo" class="h-10" />
-    <h1 class="text-2xl font-bold asu-gold">MU/STPV Evaluation Generator</h1>
-  </div>
-
-  <a href="/logout" class="asu-maroon asu-maroon-hover rounded-md p-2 flex items-center justify-center w-10 h-10">
-    <img src="/static/icons/house-icon.svg" alt="Logout" class="w-6 h-6 invert" />
-  </a>
-</div>
+  {% include 'partials/topbar.html' %}
 
 <!-- Content -->
 <div class="p-6 max-w-2xl mx-auto space-y-8 mt-10">

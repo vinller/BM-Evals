@@ -2,55 +2,112 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Take Evaluation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Evaluation Questions</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/static/style.css" />
+
 </head>
-<body class="font-sans min-h-screen bg-black text-white">
 
-  <!-- Top Bar -->
-  <div class="flex justify-between items-center px-6 py-4 topbar">
-    <div class="flex items-center gap-4">
-      <img src="/static/icons/asu-logo2.png" alt="ASU Logo" class="h-10" />
-      <h1 class="text-2xl font-bold asu-gold">Take Your Evaluation</h1>
-    </div>
-    <a href="/logout" class="asu-maroon asu-maroon-hover rounded-md p-2 flex items-center justify-center w-10 h-10">
-      <img src="/static/icons/right-bracket-icon.svg" alt="Logout" class="w-6 h-6 invert" />
-    </a>
+<body class="bg-black text-white min-h-screen font-sans flex flex-col">
+
+  {% include 'partials/topbar.html' %}
+
+<!-- Content -->
+<div class="p-6 max-w-3xl mx-auto space-y-8 mt-10">
+
+  <div class="text-center space-y-2">
+    <h2 class="text-3xl font-bold asu-gold">Evaluation UUID: {{ uuid }}</h2>
+    <p class="text-lg">Time remaining: <span id="timer" class="text-asu-gold font-bold"></span></p>
   </div>
 
-  <!-- Evaluation Form -->
-  <div class="p-8 max-w-4xl mx-auto space-y-6">
-    <h2 class="text-xl font-semibold asu-gold mb-4">Evaluation ID: {{ eval_data['uuid'] }}</h2>
+  <form method="POST" action="/submit_evaluation/{{ uuid }}" class="space-y-6">
+    <input type="hidden" name="uuid" value="{{ uuid }}">
 
-    <form action="/submit_evaluation/{{ eval_data['uuid'] }}" method="POST">
-      {% for idx, question in enumerate(eval_data['questions']) %}
-        <div class="bg-gray-800 p-4 rounded mb-4">
-          <p class="font-semibold">{{ question['q'] }}</p>
-          <textarea name="answer_{{ idx }}" rows="4" class="w-full p-2 mt-2 rounded bg-gray-700 text-white" placeholder="Your answer here..." required></textarea>
-        </div>
-      {% endfor %}
-
-      <button type="submit" class="asu-maroon asu-maroon-hover px-6 py-2 rounded text-white">Submit Evaluation</button>
-    </form>
-
-    <div class="text-lg mt-4">
-      <p>Time remaining: <span id="timer">02:00:00</span></p>
+    {% for question in eval_data['questions'] %}
+    <div class="bg-gray-800 p-6 rounded shadow-md">
+      <p class="font-semibold">{{ loop.index }}. {{ question.q }}</p>
+      <textarea name="score_{{ loop.index0 }}" rows="4" class="w-full p-3 rounded text-black mt-3" placeholder="Your answer..." required></textarea>
     </div>
-  </div>
+    {% endfor %}
 
-  <script>
-    // Countdown Timer (2 hours)
-    let timer = 7200; // 2 hours in seconds
-    setInterval(function() {
-      let hours = Math.floor(timer / 3600);
-      let minutes = Math.floor((timer % 3600) / 60);
-      let seconds = timer % 60;
-      document.getElementById("timer").textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-      if (timer > 0) timer--;
-    }, 1000);
-  </script>
+    <div class="flex justify-center">
+      <button type="submit" id="submit" class="asu-maroon asu-maroon-hover px-8 py-3 rounded-md font-bold text-white mt-6">
+        Submit Evaluation
+      </button>
+    </div>
+  </form>
+
+</div>
+
+<script>
+let countdown = {{ countdown }};
+let countdownInterval;
+
+function updateTimer() {
+  let hours = Math.floor(countdown / 3600);
+  let minutes = Math.floor((countdown % 3600) / 60);
+  let seconds = countdown % 60;
+  document.getElementById("timer").innerText = `${hours}:${minutes}:${seconds}`;
+
+  const timerElement = document.getElementById("timer");
+  if (countdown <= 300) { // 5 minutes left
+    timerElement.classList.add("text-red-500");
+    timerElement.classList.remove("text-asu-gold");
+  } else {
+    timerElement.classList.add("text-asu-gold");
+    timerElement.classList.remove("text-red-500");
+  }
+
+  if (countdown <= 0) {
+    clearInterval(countdownInterval);
+    alert("Time's up! Submitting automatically...");
+    document.getElementById("submit").click();
+  }
+
+  countdown--;
+  localStorage.setItem('countdown', countdown);
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const savedCountdown = localStorage.getItem('countdown');
+  if (savedCountdown !== null && !isNaN(savedCountdown)) {
+    countdown = parseInt(savedCountdown);
+  }
+
+  countdownInterval = setInterval(updateTimer, 1000);
+
+  const form = document.querySelector("form");
+  const submitBtn = document.getElementById("submit");
+
+  // 🔥 Disable double-submit
+  form.addEventListener("submit", () => {
+    localStorage.removeItem('countdown'); // Clear timer when submitting
+    localStorage.removeItem('savedAnswers'); // Clear saved answers when submitting
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Submitting...";
+    submitBtn.classList.add("opacity-50", "cursor-not-allowed");
+  });
+
+  // 🔥 Save answers
+  const answers = document.querySelectorAll('textarea');
+  const savedAnswers = JSON.parse(localStorage.getItem('savedAnswers') || '{}');
+
+  answers.forEach(textarea => {
+    if (savedAnswers[textarea.name]) {
+      textarea.value = savedAnswers[textarea.name];
+    }
+
+    textarea.addEventListener('input', () => {
+      const updatedAnswers = JSON.parse(localStorage.getItem('savedAnswers') || '{}');
+      updatedAnswers[textarea.name] = textarea.value;
+      localStorage.setItem('savedAnswers', JSON.stringify(updatedAnswers));
+    });
+  });
+});
+
+</script>
 
 </body>
 </html>
